@@ -49,7 +49,11 @@ PASSWORD=${2:-}
 
 IMAGENAME=$USERNAME/analyze-restful-api-load-test-results:$TAG
 
+set -x
+cp "$SCRIPT_DIR_NAME/../bin/analyze_restful_api_load_test_results.*" "$SCRIPT_DIR_NAME/."
+set +x
 docker build -t $IMAGENAME "$SCRIPT_DIR_NAME"
+rm "analyze_restful_api_load_test_results.*"
 
 if [ "$PASSWORD" != "" ]; then
     docker login --username="$USERNAME" --password="$PASSWORD"
