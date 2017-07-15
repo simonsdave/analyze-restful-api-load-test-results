@@ -92,14 +92,17 @@ class Main(object):
         reg_ex = re.compile(reg_ex_pattern)
 
         for line in sys.stdin:
-            match = reg_ex.match(line)
-            if match:
-                timestamp = dateutil.parser.parse(match.group('timestamp'))
-                request_type = match.group('request_type')
-                success = int(match.group('success'))
-                response_time = float(match.group('response_time'))
+            try:
+                match = reg_ex.match(line)
+                if match:
+                    timestamp = dateutil.parser.parse(match.group('timestamp'))
+                    request_type = match.group('request_type')
+                    success = int(match.group('success'))
+                    response_time = float(match.group('response_time'))
 
-                Response(request_type, timestamp, success, response_time)
+                    Response(request_type, timestamp, success, response_time)
+            except Exception as ex:
+                print line
 
     def numerical_analysis(self):
         overall_title = '%d @ XXX from %s to %s' % (
