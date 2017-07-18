@@ -105,8 +105,8 @@ class Main(object):
                 print line
 
     def numerical_analysis(self):
-        overall_title = '%d @ XXX from %s to %s' % (
-            Response.total_number_responses(),
+        overall_title = '%s @ XXX from %s to %s' % (
+            '{:,}'.format(Response.total_number_responses()),
             Response.first_timestamp,
             Response.last_timestamp,
         )
@@ -177,54 +177,59 @@ class Main(object):
                 tabloid_height = 11
                 plt.figure(figsize=(tabloid_width, tabloid_height))
 
-                handles = []
-
                 column_labels = ['m', 'b']
                 row_labels = []
+                row_colours = []
                 cells = []
 
                 m_fmt = '%.4f'
                 b_fmt = '%.0f'
 
-                ys = [min(response_times_in_buckets.get(x, [0])) for x in xs]
-                m, b = numpy.polyfit(xs, ys, 1)
-                cells.append([m_fmt % m, b_fmt % b])
-                row_labels.append('min')
-                handle, = plt.plot(xs, ys, label='min')
-                handles.append(handle)
-
-                percentiles = [90, 99]
-                for percentile in percentiles:
-                    ys = [numpy.percentile(response_times_in_buckets.get(x, [0]), percentile) for x in xs]
-                    m, b = numpy.polyfit(xs, ys, 1)
-                    cells.append([m_fmt % m, b_fmt % b])
-                    row_labels.append(str(percentile))
-                    handle, = plt.plot(xs, ys, label='%dth percentile' % percentile)
-                    handles.append(handle)
-
                 ys = [max(response_times_in_buckets.get(x, [0])) for x in xs]
                 m, b = numpy.polyfit(xs, ys, 1)
                 cells.append([m_fmt % m, b_fmt % b])
                 row_labels.append('max')
-                handle, = plt.plot(xs, ys, label='max')
-                handles.append(handle)
+                row_colours.append('yellow')
+                plt.plot(xs, ys, row_colours[-1], label=row_labels[-1], zorder=1)
 
+                percentiles = [99, 90]
+                percentile_colours = ['orange', 'red']
+                zorders = [2, 3]
+                for percentile, percentile_colour, zorder in zip(percentiles, percentile_colours, zorders):
+                    ys = [numpy.percentile(response_times_in_buckets.get(x, [0]), percentile) for x in xs]
+                    m, b = numpy.polyfit(xs, ys, 1)
+                    cells.append([m_fmt % m, b_fmt % b])
+                    # see TeX markup @ https://matplotlib.org/users/mathtext.html
+                    # for how the superscripting works
+                    row_labels.append('$%d^{th} percentile$' % percentile)
+                    row_colours.append(percentile_colour)
+                    plt.plot(
+                        xs,
+                        ys,
+                        row_colours[-1],
+                        label=row_labels[-1],
+                        zorder=zorder)
+
+                ys = [min(response_times_in_buckets.get(x, [0])) for x in xs]
+                m, b = numpy.polyfit(xs, ys, 1)
+                cells.append([m_fmt % m, b_fmt % b])
+                row_labels.append('min')
+                row_colours.append('blue')
+                plt.plot(xs, ys, row_colours[-1], label=row_labels[-1], zorder=4)
+
+                # table of analysis results will also act as legend
                 plt.table(
                     colWidths=[0.1] * 3,
                     cellText=cells,
                     rowLabels=row_labels,
+                    rowColours=row_colours,
                     rowLoc='right',
                     colLabels=column_labels,
-                    loc='center right')
-                plt.legend(
-                    handles=handles,
-                    loc='upper center',
-                    bbox_to_anchor=(0.5, -0.05),
-                    ncol=len(handles),
-                    fancybox=True,
-                    shadow=True,
-                    fontsize='large')
+                    loc='bottom')
+                    # bbox=[0, -0.5, 1, 0.275])
+
                 plt.grid(True)
+
                 plt.xlabel(
                     'Seconds Since Test Start',
                     fontsize='large',
@@ -236,10 +241,10 @@ class Main(object):
 
                 hours, remainder = divmod((Response.last_timestamp - Response.first_timestamp).total_seconds(), 3600)
                 minutes, _ = divmod(remainder, 60)
-                title = '%s\n(%.0f%% of %d requests @ %d concurrency for %d hours %d minutes)\n' % (
+                title = '%s\n(%.0f%% of %s requests @ %d concurrency for %d hours %d minutes)\n' % (
                     request_type.replace('-', ' '),
                     (len(responses) * 100.0) / Response.total_number_responses(),
-                    Response.total_number_responses(),
+                    '{:,}'.format(Response.total_number_responses()),
                     999, # Response.number_of_locusts(),
                     hours,
                     minutes)
