@@ -20,6 +20,8 @@ class Response(object):
 
     responses_by_request_type = {}
 
+    responses_by_vus = {}
+
     @classmethod
     def request_types(cls):
         return cls.responses_by_request_type.keys()
@@ -36,20 +38,23 @@ class Response(object):
     def failures_for_request_type(cls, request_type):
         return [response for response in cls.responses_by_request_type[request_type] if not response.success]
 
+    # k6 calls them virtual users (vu) and gives each vu a unique integer identifier
+    # locust calls them locusts and gives each one a unique identifier
     @classmethod
-    def number_of_locusts(cls):
-        return len(cls.responses_by_locust_id.keys())
+    def number_of_vus(cls):
+        return len(cls.responses_by_vus.keys())
 
     @classmethod
     def total_number_responses(cls):
         return len(cls.responses)
 
-    def __init__(self, request_type, timestamp, success, response_time):
+    def __init__(self, request_type, timestamp, success, vu, response_time):
         object.__init__(self)
 
         self.request_type = request_type
         self.timestamp = timestamp
         self.success = success
+        self.vu = vu
         self.response_time = response_time
 
         type(self).responses.append(self)
@@ -57,6 +62,10 @@ class Response(object):
         if self.request_type not in type(self).responses_by_request_type:
             type(self).responses_by_request_type[self.request_type] = []
         type(self).responses_by_request_type[self.request_type].append(self)
+
+        if self.vu not in type(self).responses_by_vus:
+            type(self).responses_by_vus[self.vu] = []
+        type(self).responses_by_vus[self.vu].append(self)
 
         type(self).first_timestamp = min(self.timestamp, type(self).first_timestamp)
         type(self).last_timestamp = max(self.timestamp, type(self).last_timestamp)
@@ -86,6 +95,7 @@ class Main(object):
             r'(?P<timestamp>.+)\t'
             r'(?P<request_type>.+)\t'
             r'(?P<success>\d)\t'
+            r'(?P<vu>.+)\t'
             r'(?P<response_time>\d+\.\d+)'
             r'\s*$'
         )
@@ -98,9 +108,10 @@ class Main(object):
                     timestamp = dateutil.parser.parse(match.group('timestamp'))
                     request_type = match.group('request_type')
                     success = int(match.group('success'))
+                    vu = match.group('vu')
                     response_time = float(match.group('response_time'))
 
-                    Response(request_type, timestamp, success, response_time)
+                    Response(request_type, timestamp, success, vu, response_time)
             except Exception as ex:
                 print line
 
@@ -245,7 +256,7 @@ class Main(object):
                     request_type.replace('-', ' '),
                     (len(responses) * 100.0) / Response.total_number_responses(),
                     '{:,}'.format(Response.total_number_responses()),
-                    999, # Response.number_of_locusts(),
+                    Response.number_of_vus(),
                     hours,
                     minutes)
                 plt.title(
