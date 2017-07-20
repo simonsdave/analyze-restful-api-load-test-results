@@ -13,5 +13,5 @@ install:
 script:
   - pep8
   - flake8
-  - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-images.sh -v -t "$TRAVIS_TAG" ./dist/ecs-*.*.*.tar.gz ./api_docs/api_docs.tar $DOCKER_USERNAME $DOCKER_PASSWORD; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-image.sh -v -t "$TRAVIS_TAG" ./dist/ecs-*.*.*.tar.gz ./api_docs/api_docs.tar $DOCKER_USERNAME $DOCKER_PASSWORD; fi
 
