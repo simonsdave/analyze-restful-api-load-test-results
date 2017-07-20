@@ -1,0 +1,17 @@
+language: python
+python:
+  - '2.7'
+sudo: required
+dist: trusty
+install:
+  # travis configures /etc/default/docker to listen on 127.0.0.1 but
+  # we want it to listen on the docker0 network where 172.17.0.1
+  # is the IP assigned to the host
+  - sudo sed -i -e 's|DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock"|DOCKER_OPTS="-H tcp://172.17.0.1:2375 -H unix:///var/run/docker.sock"|g' /etc/default/docker
+  - sudo service docker restart
+  - source cfg4dev
+script:
+  - pep8
+  - flake8
+  - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-images.sh -v -t "$TRAVIS_TAG" ./dist/ecs-*.*.*.tar.gz ./api_docs/api_docs.tar $DOCKER_USERNAME $DOCKER_PASSWORD; fi
+
