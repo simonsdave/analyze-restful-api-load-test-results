@@ -112,7 +112,7 @@ class Main(object):
                     response_time = float(match.group('response_time'))
 
                     Response(request_type, timestamp, success, vu, response_time)
-            except Exception as ex:
+            except Exception:
                 print line
 
     def numerical_analysis(self):
@@ -237,7 +237,7 @@ class Main(object):
                     rowLoc='right',
                     colLabels=column_labels,
                     loc='bottom')
-                    # bbox=[0, -0.5, 1, 0.275])
+                # bbox=[0, -0.5, 1, 0.275])
 
                 plt.grid(True)
 
