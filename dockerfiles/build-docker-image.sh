@@ -13,7 +13,7 @@ usage() {
 }
 
 VERBOSE=0
-TAG="latest"
+TAG=latest
 
 while true
 do
@@ -30,7 +30,7 @@ do
             ;;
         -t)
             shift
-            TAG=$1
+            TAG=$(echo $1 | sed -e 's/^\s*$/latest/g')
             shift
             ;;
         *)
