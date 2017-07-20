@@ -13,6 +13,4 @@ install:
 script:
   - pep8
   - flake8
-  - echo "tag = >>>$TRAVIS_TAG<<<"
-  - echo "branch = >>>$TRAVIS_BRANCH<<<"
   - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-image.sh -v -t "$TRAVIS_TAG" $DOCKER_USERNAME $DOCKER_PASSWORD; fi
