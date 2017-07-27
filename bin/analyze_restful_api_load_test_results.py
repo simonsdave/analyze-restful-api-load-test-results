@@ -115,7 +115,7 @@ class Main(object):
             except Exception:
                 print line
 
-    def numerical_analysis(self):
+    def numerical_analysis(self, max_slope):
         overall_title = '%s @ XXX from %s to %s' % (
             '{:,}'.format(Response.total_number_responses()),
             Response.first_timestamp,
@@ -146,6 +146,8 @@ class Main(object):
         print title
         print '-' * len(title)
 
+        return_value = 0
+
         for request_type in request_types:
             responses = Response.responses_for_request_type(request_type)
             seconds_since_start = [response.seconds_since_start for response in responses]
@@ -163,8 +165,13 @@ class Main(object):
             args.append(max(response_times))
             print fmt % tuple(args)
 
+            if max_slope < abs(m):
+                return_value = 1
+
         print ''
         print '=' * len(overall_title)
+
+        return return_value
 
     def generate_graphs(self, graphs):
         with PdfPages(graphs) as pdf:
@@ -275,13 +282,25 @@ class CommandLineParser(optparse.OptionParser):
             'usage: %prog [options]',
             description='This utility analyzes load test results')
 
+        default = 0.1
+        help_msg = 'max slope for all requests by type - default = %.2f' % default
+        self.add_option(
+            '--max-slope',
+            action='store',
+            dest='max_slope',
+            default=default,
+            type='float',
+            help=help_msg)
+
+        default = None
+        help_msg = 'pdf filename for graphs - default = %s' % default
         self.add_option(
             '--graphs',
             action='store',
             dest='graphs',
-            default=None,
+            default=default,
             type='string',
-            help='pdf file name for graphs')
+            help=help_msg)
 
     def parse_args(self, *args, **kwargs):
         (clo, cla) = optparse.OptionParser.parse_args(self, *args, **kwargs)
@@ -296,7 +315,9 @@ if __name__ == '__main__':
 
     main = Main()
     main.load_data()
-    main.numerical_analysis()
+    exit_code = main.numerical_analysis(clo.max_slope)
 
     if clo.graphs:
         main.generate_graphs(clo.graphs)
+
+    sys.exit(exit_code)

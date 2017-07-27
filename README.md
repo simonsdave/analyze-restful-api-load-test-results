@@ -36,7 +36,7 @@ to assess a numerical assessment failure
 The [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) file as
 input for ```analyze-restful-api-load-test-results``` should be UTF8 encoded
 and contain the fields below separated by a single tab.
-[This](samples/input-001.tsv) is a sample input file.
+[This](samples/001-input.tsv) is a sample input file.
 
 * timestamp
 * request type - typically this is going to be an HTTP verb but
