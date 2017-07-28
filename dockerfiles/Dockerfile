@@ -2,9 +2,13 @@
 #
 #   docker build -t simonsdave/analyze-restful-api-load-test-results .
 #
-# to run the image
+# to run just the numerical analysis
 #
-#   docker run -i -v $PWD:/graphs simonsdave/analyze-restful-api-load-test-results analyze_restful_api_load_test_results.sh --graphs mygraphs.pdf < input.tsv
+#   docker run -i simonsdave/analyze-restful-api-load-test-results analyze_restful_api_load_test_results.sh < input.tsv
+#
+# to run just the numerical and graphical analysis
+#
+#   docker run -i -v $PWD:/graphs simonsdave/analyze-restful-api-load-test-results analyze_restful_api_load_test_results.sh --graphs=/graphs/mygraphs.pdf < input.tsv
 #
 # for testing/debugging
 #
