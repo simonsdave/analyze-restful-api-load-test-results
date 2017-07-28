@@ -62,7 +62,7 @@ means the CI pipeline only has to download the docker image which is
 generally quite quick.
 
 The following command runs ```analyze-restful-api-load-test-results```'s
-numerical analysis.
+numerical analysis on [this](samples/001-input.tsv) sample data.
 
 ```bash
 >docker run \
@@ -70,15 +70,46 @@ numerical analysis.
     simonsdave/analyze-restful-api-load-test-results \
     analyze_restful_api_load_test_results.sh \
     < 001-input.tsv
-======================================================================================
-21,426 @ XXX from 2017-07-19 01:25:02.410082+00:00 to 2017-07-19 01:30:02.245437+00:00
-======================================================================================
+=====================================================================================
+21,426 @ 25 from 2017-07-19 01:25:02.410082+00:00 to 2017-07-19 01:30:02.245437+00:00
+=====================================================================================
 
 Request Type                 Ok Error         m        b      Min       50       95       99      Max
 -----------------------------------------------------------------------------------------------------
 GET                       17017     0    0.0551      293      106      290      432      509      842
 PUT                        4409     0    0.0351      531      257      508      765     1131     1748
 
-======================================================================================
+=====================================================================================
 >
 ```
+
+The following command runs ```analyze-restful-api-load-test-results```'s
+numerical and graphical analysis. The graphical analysis creates a PDF doc
+called ```dave.pdf``` in the working directory.
+
+```bash
+>docker run \
+    -i \
+    -v $PWD:/graphs \
+    simonsdave/analyze-restful-api-load-test-results \
+    analyze_restful_api_load_test_results.sh \
+    --graphs=/graphs/dave.pdf \
+    < 001-input.tsv
+=====================================================================================
+21,426 @ 25 from 2017-07-19 01:25:02.410082+00:00 to 2017-07-19 01:30:02.245437+00:00
+=====================================================================================
+
+Request Type                 Ok Error         m        b      Min       50       95       99      Max
+-----------------------------------------------------------------------------------------------------
+GET                       17017     0    0.0551      293      106      290      432      509      842
+PUT                        4409     0    0.0351      531      257      508      765     1131     1748
+
+=====================================================================================
+>
+```
+
+The ```dave.pdf``` doc will contain 1 page per request type. Each page will
+contain a single graph that looks like the graph below and a sample of the
+full PDF can be found [here](samples/001-input.pdf).
+
+![](samples/001-input.png)
