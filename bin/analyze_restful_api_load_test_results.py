@@ -116,8 +116,9 @@ class Main(object):
                 print line
 
     def numerical_analysis(self, max_slope):
-        overall_title = '%s @ XXX from %s to %s' % (
+        overall_title = '%s @ %s from %s to %s' % (
             '{:,}'.format(Response.total_number_responses()),
+            '{:,}'.format(Response.number_of_vus()),
             Response.first_timestamp,
             Response.last_timestamp,
         )
