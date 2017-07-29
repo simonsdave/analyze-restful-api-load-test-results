@@ -106,6 +106,8 @@ class Main(object):
                 match = reg_ex.match(line)
                 if match:
                     timestamp = dateutil.parser.parse(match.group('timestamp'))
+                    if not timestamp.tzinfo:
+                        timestamp = timestamp.replace(tzinfo=dateutil.tz.tzlocal())
                     request_type = match.group('request_type')
                     success = int(match.group('success'))
                     vu = match.group('vu')
