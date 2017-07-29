@@ -114,8 +114,9 @@ class Main(object):
                     response_time = float(match.group('response_time'))
 
                     Response(request_type, timestamp, success, vu, response_time)
-            except Exception:
-                print line
+            except Exception as ex:
+                print 'ERROR: %s' % ex
+                print '>>>%s<<<' % line
 
     def numerical_analysis(self, max_slope):
         overall_title = '%s @ %s from %s to %s' % (
