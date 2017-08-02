@@ -6,12 +6,13 @@
 [![Build Status](https://travis-ci.org/simonsdave/analyze-restful-api-load-test-results.svg?branch=master)](https://travis-ci.org/simonsdave/analyze-restful-api-load-test-results)
 [![docker-simonsdave/analyze-restful-api-load-test-results](https://img.shields.io/badge/docker-simonsdave%2Fanalyze%20restful%20api%20load%20test%20results-blue.svg)](https://hub.docker.com/r/simonsdave/analyze-restful-api-load-test-results/)
 
-As part of a microservice's CI/CD process it's ideal to
-load test the microservice's RESTful API to confirm
+As part of a microservice's CI process it's ideal to
+load/stress test the microservice's RESTful API to confirm
 that changes to the microservice's code base do not negatively
 affect the microservice's performance characteristics.
-There are a number of very good load testing tools - [locust](http://locust.io)
-and [k6](https://k6.io) are great examples.
+There are a number of very good load testing tools - for
+example [locust](http://locust.io)
+and [k6](https://k6.io).
 These tools can easily drive load into a microservice.
 The real challenge is the automated assessment of the load test results
 and this is where ```analyze-restful-api-load-test-results``` helps.
