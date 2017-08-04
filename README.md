@@ -11,7 +11,8 @@ load/stress test the microservice's RESTful API to confirm
 that changes to the microservice's code base do not negatively
 affect the microservice's performance characteristics.
 There are a number of very good load testing tools - for
-example [locust](http://locust.io)
+example [locust](http://locust.io),
+[JMeter](http://jmeter.apache.org)
 and [k6](https://k6.io).
 These tools can easily drive load into a microservice.
 The real challenge is the automated assessment of the load test results
