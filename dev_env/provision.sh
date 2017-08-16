@@ -6,11 +6,13 @@
 
 set -e
 
-# assumes we're working in EST ...
+apt-get update -y
+
+#
+# assumes we're working in EST and enable NTP synchronization.
 #
 timedatectl set-timezone EST
-
-apt-get update -y
+apt-get install -y ntp
 
 #
 # install and configure git
