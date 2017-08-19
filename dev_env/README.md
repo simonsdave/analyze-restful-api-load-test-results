@@ -11,7 +11,7 @@ Spin up a VM using [create_dev_env.sh](create_dev_env.sh)
 (instead of using ```vagrant up```.
 
 ```bash
->./create_dev_env.sh
+>./create_dev_env.sh simonsdave simonsdave@gmail.com ~/.ssh/id_rsa.pub ~/.ssh/id_rsa
 >
 ```
 
