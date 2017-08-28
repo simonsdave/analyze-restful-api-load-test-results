@@ -1,6 +1,12 @@
 language: python
 python:
   - '2.7'
+addons:
+  apt:
+    sources:
+    - debian-sid
+    packages:
+    - shellcheck
 sudo: required
 dist: trusty
 services:
@@ -10,4 +16,5 @@ install:
 script:
   - pep8
   - flake8
+  - shellcheck $(find . -name \*.sh)
   - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-image.sh -v -t "$TRAVIS_TAG" $DOCKER_USERNAME $DOCKER_PASSWORD; fi
