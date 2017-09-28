@@ -1,7 +1,7 @@
 # Development Environment
 
 To increase predicability, it is recommended
-that ```analyze-restful-api-load-test-results``
+that ```analyze-restful-api-load-test-results```
  development be done on a [Vagrant](http://www.vagrantup.com/) provisioned
 [VirtualBox](https://www.virtualbox.org/)
 VM running [Ubuntu 14.04](http://releases.ubuntu.com/14.04/).
@@ -12,7 +12,33 @@ Spin up a VM using [create_dev_env.sh](create_dev_env.sh)
 
 ```bash
 >./create_dev_env.sh simonsdave simonsdave@gmail.com ~/.ssh/id_rsa.pub ~/.ssh/id_rsa
+.
+.
+.
 >
+```
+
+SSH into the VM
+
+```bash
+>vagrant ssh
+Welcome to Ubuntu 14.04 LTS (GNU/Linux 3.13.0-27-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+0 packages can be updated.
+0 updates are security updates.
+
+New release '16.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+~>
 ```
 
 Start the ssh-agent in the background.
