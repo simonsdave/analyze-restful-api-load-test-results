@@ -9,7 +9,7 @@ install:
   - source cfg4dev
   - docker pull koalaman/shellcheck:latest
 script:
-  - pep8
+  - pycodestyle
   - flake8
   - docker run -v "$PWD:/mnt" koalaman/shellcheck:latest $(find . -name \*.sh | grep -v \.\/env)
   - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-image.sh -t "$TRAVIS_TAG" $DOCKER_USERNAME $DOCKER_PASSWORD; fi
