@@ -1,5 +1,5 @@
 flake8>=2.5.3
 matplotlib==2.1.1
-numpy==1.13.3
+numpy==1.14.0
 pycodestyle==2.3.1
 python-dateutil==2.6.1
