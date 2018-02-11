@@ -114,6 +114,8 @@ class Main(object):
                     response_time = float(match.group('response_time'))
 
                     Response(request_type, timestamp, success, vu, response_time)
+                else:
+                    print 'ERROR: invalid input format - %s' % line.strip()
             except Exception as ex:
                 print 'ERROR: %s' % ex
                 print '>>>%s<<<' % line
