@@ -29,16 +29,15 @@ MAINTAINER Dave Simons
 # in there based on advice described in
 # http://blog.replicated.com/refactoring-a-dockerfile-for-image-size/
 
-ADD requirements.txt /tmp/requirements.txt
+COPY analyze-restful-api-load-test-results.tar.gz /tmp/analyze-restful-api-load-test-results.tar.gz
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends python python-dev python-pip libxft-dev libfreetype6 libfreetype6-dev libffi-dev && \
     apt-get -y build-dep matplotlib && \
-    pip install --requirement /tmp/requirements.txt && \
+    pip install /tmp/analyze-restful-api-load-test-results.tar.gz && \
+    rm /tmp/analyze-restful-api-load-test-results.tar.gz && \
     apt-get remove -y python-pip curl && \
     rm -rf /var/lib/apt/lists/*
-
-RUN rm /tmp/requirements.txt
 
 # as per http://stackoverflow.com/questions/29073802/matplotlib-cannot-find-configuration-file-matplotlibrc
 RUN mkdir -p /root/.config/matplotlib
@@ -46,6 +45,3 @@ ADD matplotlibrc /root/.config/matplotlib/matplotlibrc
 RUN chown --recursive root:root /root/.config
 
 RUN mkdir -p /graphs
-
-ADD analyze_restful_api_load_test_results.py /usr/local/bin/analyze_restful_api_load_test_results.py
-ADD analyze_restful_api_load_test_results.sh /usr/local/bin/analyze_restful_api_load_test_results.sh

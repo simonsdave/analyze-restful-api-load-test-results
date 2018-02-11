@@ -5,6 +5,8 @@ sudo: required
 dist: trusty
 services:
   - docker
+env:
+  - DOCKER_TEMP_TAG=bindle
 install:
   - source cfg4dev
   - docker pull koalaman/shellcheck:latest
@@ -15,6 +17,18 @@ script:
   - travis_fold start "build.python.packages"
   - python setup.py bdist_wheel sdist --formats=gztar
   - travis_fold end "build.python.packages"
-  - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-image.sh -t "$TRAVIS_TAG" $DOCKER_USERNAME $DOCKER_PASSWORD; fi
-  - docker run -i simonsdave/analyze-restful-api-load-test-results:${TRAVIS_TAG:-latest} analyze_restful_api_load_test_results.sh < samples/001-input.tsv
-  - docker run -i simonsdave/analyze-restful-api-load-test-results:${TRAVIS_TAG:-latest} analyze_restful_api_load_test_results.sh --graphs=/tmp/dave-was-here.pdf < samples/001-input.tsv
+  - travis_fold start "build.docker.images"
+  - ./dockerfiles/build-docker-image.sh "$DOCKER_USERNAME" "$DOCKER_TEMP_TAG" "./dist/analyze-restful-api-load-test-results-*.*.*.tar.gz"
+  - travis_fold end "build.docker.images"
+  # :TODO: these 'docker run' statements should be in a nosetest
+  - docker run -i simonsdave/analyze-restful-api-load-test-results:$DOCKER_TEMP_TAG analyze_restful_api_load_test_results.sh < samples/001-input.tsv
+  - docker run -i simonsdave/analyze-restful-api-load-test-results:$DOCKER_TEMP_TAG analyze_restful_api_load_test_results.sh --graphs=/tmp/dave-was-here.pdf < samples/001-input.tsv
+deploy:
+  - provider: script
+    script: ./dockerfiles/tag-and-push-docker-image.sh $DOCKER_USERNAME $DOCKER_PASSWORD $DOCKER_TEMP_TAG latest
+    on:
+      branch: master
+  - provider: script
+    script: ./dockerfiles/tag-and-push-docker-image.sh $DOCKER_USERNAME $DOCKER_PASSWORD $DOCKER_TEMP_TAG $TRAVIS_TAG
+    on:
+      tags: true
