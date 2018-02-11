@@ -18,7 +18,7 @@ script:
   - python setup.py bdist_wheel sdist --formats=gztar
   - travis_fold end "build.python.packages"
   - travis_fold start "build.docker.images"
-  - ./dockerfiles/build-docker-image.sh "$DOCKER_USERNAME" "$DOCKER_TEMP_TAG" "./dist/analyze-restful-api-load-test-results-*.*.*.tar.gz"
+  - ./dockerfiles/build-docker-image.sh "$DOCKER_USERNAME" "$DOCKER_TEMP_TAG" ./dist/analyze-restful-api-load-test-results-*.*.*.tar.gz
   - travis_fold end "build.docker.images"
   # :TODO: these 'docker run' statements should be in a nosetest
   - docker run -i simonsdave/analyze-restful-api-load-test-results:$DOCKER_TEMP_TAG analyze_restful_api_load_test_results.sh < samples/001-input.tsv
