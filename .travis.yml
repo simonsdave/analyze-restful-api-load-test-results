@@ -12,6 +12,9 @@ script:
   - pycodestyle
   - flake8
   - docker run -v "$PWD:/mnt" koalaman/shellcheck:latest $(find . -name \*.sh | grep -v \.\/env)
+  - travis_fold start "build.python.packages"
+  - python setup.py bdist_wheel sdist --formats=gztar
+  - travis_fold end "build.python.packages"
   - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_TAG" != "" ]; then ./dockerfiles/build-docker-image.sh -t "$TRAVIS_TAG" $DOCKER_USERNAME $DOCKER_PASSWORD; fi
   - docker run -i simonsdave/analyze-restful-api-load-test-results:${TRAVIS_TAG:-latest} analyze_restful_api_load_test_results.sh < samples/001-input.tsv
   - docker run -i simonsdave/analyze-restful-api-load-test-results:${TRAVIS_TAG:-latest} analyze_restful_api_load_test_results.sh --graphs=/tmp/dave-was-here.pdf < samples/001-input.tsv
