@@ -22,6 +22,8 @@ FROM ubuntu:14.04
 
 MAINTAINER Dave Simons
 
+ENV DEBIAN_FRONTEND noninteractive
+
 # the apt-get of "build-dep matplotlib" is as per
 # http://blog.pangyanhan.com/posts/2015-07-25-how-to-install-matplotlib-using-virtualenv-on-ubuntu.html
 
@@ -45,3 +47,5 @@ ADD matplotlibrc /root/.config/matplotlib/matplotlibrc
 RUN chown --recursive root:root /root/.config
 
 RUN mkdir -p /graphs
+
+ENV DEBIAN_FRONTEND newt
