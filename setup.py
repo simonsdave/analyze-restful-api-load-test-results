@@ -44,7 +44,7 @@ setup(
         'bin/analyze_restful_api_load_test_results.sh',
     ],
     install_requires=[
-        'matplotlib==2.2.0',
+        'matplotlib==2.2.2',
         'numpy==1.14.2',
         'python-dateutil==2.7.0',
     ],
