@@ -11,6 +11,7 @@ install:
   - source cfg4dev
   - docker pull koalaman/shellcheck:latest
 script:
+  - pip check
   - flake8
   - docker run -v "$PWD:/mnt" koalaman/shellcheck:latest $(find . -name \*.sh | grep -v \.\/env)
   - travis_fold start "build.python.packages"
