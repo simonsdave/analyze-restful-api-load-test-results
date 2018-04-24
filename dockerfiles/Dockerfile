@@ -18,7 +18,7 @@
 #
 #   docker push simonsdave/analyze-restful-api-load-test-results
 #
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
 MAINTAINER Dave Simons
 
