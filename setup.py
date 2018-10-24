@@ -47,7 +47,7 @@ setup(
         # matplotlib 2.2.x is the Python 2 LTS; matplotlib <= 3.0.0
         # only supports Python 3
         'matplotlib==2.2.3',
-        'numpy==1.15.2',
+        'numpy==1.15.3',
         'python-dateutil==2.7.3',
     ],
     include_package_data=True,
