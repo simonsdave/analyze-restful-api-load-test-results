@@ -55,7 +55,12 @@ fi
 
 DOCKER_IMAGE=${1:-}
 
+# :TODO: would be nice to call a wrapper for each unit test where the
+# wrapper would echo the period and then call the tests
+echo -n "."
 test_analyze_no_graphs "$DOCKER_IMAGE"
+echo -n "."
 test_analyze_with_graphs "$DOCKER_IMAGE"
+echo ""
 
 exit 0
