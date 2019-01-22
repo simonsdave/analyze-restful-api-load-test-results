@@ -5,8 +5,6 @@ set -e
 SCRIPT_DIR_NAME="$( cd "$( dirname "$0" )" && pwd )"
 
 test_analyze_no_graphs() {
-    DOCKER_IMAGE=${1:-}
-
     STDOUT=$(mktemp)
 
     docker run \
@@ -23,8 +21,6 @@ test_analyze_no_graphs() {
 }
 
 test_analyze_with_graphs() {
-    DOCKER_IMAGE=${1:-}
-
     STDOUT=$(mktemp)
     GRAPH=$(mktemp)
 
@@ -48,6 +44,13 @@ test_analyze_with_graphs() {
     rm "$STDOUT"
 }
 
+test_wrapper() {
+    TEST_FUNCTION_NAME=${1:-}
+    NUMBER_TESTS_RUN=$((NUMBER_TESTS_RUN+1))
+    echo -n "."
+    "$TEST_FUNCTION_NAME"
+}
+
 if [ $# != 1 ]; then
     echo "usage: $(basename "$0") <docker image>" >&2
     exit 1
@@ -55,12 +58,10 @@ fi
 
 DOCKER_IMAGE=${1:-}
 
-# :TODO: would be nice to call a wrapper for each unit test where the
-# wrapper would echo the period and then call the tests
-echo -n "."
-test_analyze_no_graphs "$DOCKER_IMAGE"
-echo -n "."
-test_analyze_with_graphs "$DOCKER_IMAGE"
+NUMBER_TESTS_RUN=0
+test_wrapper test_analyze_no_graphs
+test_wrapper test_analyze_with_graphs
 echo ""
+echo "Successfully completed $NUMBER_TESTS_RUN integration tests."
 
 exit 0
