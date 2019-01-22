@@ -9,7 +9,17 @@ set -e
 #
 # install matplotlib
 #
-apt-get update -y && apt-get install -y python-virtualenv python python-dev python-pip libxft-dev libfreetype6 libfreetype6-dev libffi-dev
+apt-get update -y
+apt-get install -y \
+    python-virtualenv \
+    python \
+    python-dev \
+    python-pip \
+    libxft-dev \
+    libfreetype6 \
+    libfreetype6-dev \
+    libffi-dev
+
 # as per http://blog.pangyanhan.com/posts/2015-07-25-how-to-install-matplotlib-using-virtualenv-on-ubuntu.html
 apt-get -y build-dep matplotlib
 
