@@ -20,7 +20,7 @@ script:
   - travis_fold start "build.docker.images"
   - ./dockerfiles/build-docker-image.sh "$DOCKER_USERNAME" "$DOCKER_TEMP_TAG" ./dist/analyze-restful-api-load-test-results-*.*.*.tar.gz
   - travis_fold end "build.docker.images"
-  - ANALYZE_DOCKER_IMAGE=$DOCKER_USERNAME/analyze-restful-api-load-test-results:$DOCKER_TEMP_TAG nosetests tests/integration
+  - tests/integration/docker_image_integration_tests.sh "$DOCKER_USERNAME/analyze-restful-api-load-test-results:$DOCKER_TEMP_TAG"
 deploy:
   - provider: script
     script: ./dockerfiles/tag-and-push-docker-image.sh $DOCKER_USERNAME $DOCKER_PASSWORD $DOCKER_TEMP_TAG latest
