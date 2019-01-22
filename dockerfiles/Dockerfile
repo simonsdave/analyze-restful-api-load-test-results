@@ -24,22 +24,14 @@ MAINTAINER Dave Simons
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# the apt-get of "build-dep matplotlib" is as per
-# http://blog.pangyanhan.com/posts/2015-07-25-how-to-install-matplotlib-using-virtualenv-on-ubuntu.html
-
-# the somewhat cryptic chaining of apt-get commands is
-# in there based on advice described in
-# http://blog.replicated.com/refactoring-a-dockerfile-for-image-size/
+RUN apt-get update -y
+# this list came from https://hub.docker.com/r/aaron465/matplotlib/dockerfile
+RUN apt-get install -y python python-dev python-pip libxft-dev libfreetype6 libfreetype6-dev
+RUN pip install --upgrade pip
 
 COPY analyze-restful-api-load-test-results.tar.gz /tmp/analyze-restful-api-load-test-results.tar.gz
-
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends python python-dev python-pip libxft-dev libfreetype6 libfreetype6-dev libffi-dev && \
-    apt-get -y build-dep matplotlib && \
-    pip install /tmp/analyze-restful-api-load-test-results.tar.gz && \
-    rm /tmp/analyze-restful-api-load-test-results.tar.gz && \
-    apt-get remove -y python-pip curl && \
-    rm -rf /var/lib/apt/lists/*
+RUN pip install /tmp/analyze-restful-api-load-test-results.tar.gz
+RUN rm /tmp/analyze-restful-api-load-test-results.tar.gz
 
 # as per http://stackoverflow.com/questions/29073802/matplotlib-cannot-find-configuration-file-matplotlibrc
 RUN mkdir -p /root/.config/matplotlib
