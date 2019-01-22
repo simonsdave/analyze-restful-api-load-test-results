@@ -75,6 +75,9 @@ Install pre-reqs.
 
 ```bash
 ~> cd analyze-restful-api-load-test-results
+```
+
+```bash
 ~/analyze-restful-api-load-test-results> source cfg4dev
 New python executable in env/bin/python
 Installing setuptools, pip...done.
