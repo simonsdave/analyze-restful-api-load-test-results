@@ -52,7 +52,7 @@ setup(
     ],
     include_package_data=True,
     version=version,
-    description='Cloudfeaster Services',
+    description='Analyze RESTful API Load Test Results',
     author='Dave Simons',
     author_email='simonsdave@gmail.com',
     url='https://github.com/simonsdave/analyze-restful-api-load-test-results',
