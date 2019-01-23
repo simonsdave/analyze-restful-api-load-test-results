@@ -21,9 +21,6 @@ cp "$PROJECT_HOME_DIR/requirements.txt" "$CONTEXT_DIR/."
 cp "$PROJECT_HOME_DIR/setup.py" "$CONTEXT_DIR/."
 mkdir "$CONTEXT_DIR/analyze_restful_api_load_test_results"
 cp "$PROJECT_HOME_DIR/analyze_restful_api_load_test_results/__init__.py" "$CONTEXT_DIR/analyze_restful_api_load_test_results/."
-mkdir "$CONTEXT_DIR/bin"
-cp "$PROJECT_HOME_DIR/bin/analyze_restful_api_load_test_results.py" "$CONTEXT_DIR/bin/."
-cp "$PROJECT_HOME_DIR/bin/analyze_restful_api_load_test_results.sh" "$CONTEXT_DIR/bin/."
 
 cp "$SCRIPT_DIR_NAME/matplotlibrc" "$CONTEXT_DIR/."
 

@@ -21,9 +21,6 @@ if [ -f "$PWD/requirements.txt" ]; then
 
         "$PWD/dev_env/build-docker-image.sh" "$DEV_ENV_DOCKER_IMAGE"
     fi
-
-    export PATH=$PATH:"$PWD/bin"
-    export PYTHONPATH="$PWD"
 else
     echo "Must source this script from repo's root directory"
     return 1

@@ -18,11 +18,14 @@ COPY setup.py /tmp/setup.py
 RUN mkdir /tmp/analyze_restful_api_load_test_results
 COPY analyze_restful_api_load_test_results/__init__.py /tmp/analyze_restful_api_load_test_results/__init__.py
 RUN mkdir /tmp/bin
-COPY bin/analyze_restful_api_load_test_results.py /tmp/bin/analyze_restful_api_load_test_results.py
-COPY bin/analyze_restful_api_load_test_results.sh /tmp/bin/analyze_restful_api_load_test_results.sh
+RUN touch /tmp/bin/analyze_restful_api_load_test_results.py
+RUN touch /tmp/bin/analyze_restful_api_load_test_results.sh
 
 RUN cd /tmp && pip install --requirement "/tmp/requirements.txt"
 
 ENV DEBIAN_FRONTEND newt
+
+ENV PATH "/app/bin:${PATH}"
+ENV PYTHONPATH /app
 
 WORKDIR /app
