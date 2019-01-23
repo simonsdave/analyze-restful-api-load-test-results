@@ -9,6 +9,7 @@ env:
   - DOCKER_TEMP_TAG=bindle
 install:
   - source cfg4dev
+  - docker pull koalaman/shellcheck:latest
 script:
   - run_pip_check.sh
   - run_flake8.sh
