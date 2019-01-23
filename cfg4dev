@@ -1,11 +1,25 @@
 if [ -f "$PWD/requirements.txt" ]; then
+    # per guidelines in https://github.com/simonsdave/dev-env
+    export DEV_ENV_SOURCE_CODE=$PWD
+    export DEV_ENV_DOCKER_IMAGE="simonsdave/analyze-restful-api-load-test-results-xenial-dev-env:build"
+    export DEV_ENV_PACKAGE=analyze_restful_api_load_test_results
+
     if [ -d "$PWD/env" ]; then
         source "$PWD/env/bin/activate"
     else
         virtualenv env
         source "$PWD/env/bin/activate"
 
-        pip install --requirement "$PWD/requirements.txt"
+        # this is really here so that travis will work 
+        if ! which run_shellcheck.sh; then
+            DEV_ENV_VERSION=$(cat "$PWD/dev_env/dev-env-version.txt")
+            if [ "${DEV_ENV_VERSION:-}" == "latest" ]; then
+                DEV_ENV_VERSION=master
+            fi
+            pip install "git+https://github.com/simonsdave/dev-env.git@$DEV_ENV_VERSION"
+        fi
+
+        "$PWD/dev_env/build-docker-image.sh" "$DEV_ENV_DOCKER_IMAGE"
     fi
 
     export PATH=$PATH:"$PWD/bin"

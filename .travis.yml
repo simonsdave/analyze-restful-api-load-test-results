@@ -9,11 +9,11 @@ env:
   - DOCKER_TEMP_TAG=bindle
 install:
   - source cfg4dev
-  - docker pull koalaman/shellcheck:latest
 script:
-  - pip check
-  - flake8
-  - docker run -v "$PWD:/mnt" koalaman/shellcheck:latest $(find . -name \*.sh | grep -v \.\/env)
+  - run_pip_check.sh
+  - run_flake8.sh
+  - run_shellcheck.sh -v
+  # - run_repo_security_scanner.sh
   - travis_fold start "build.python.packages"
   - python setup.py bdist_wheel sdist --formats=gztar
   - travis_fold end "build.python.packages"
