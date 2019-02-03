@@ -16,7 +16,7 @@ script:
   - run_shellcheck.sh -v
   - run_repo_security_scanner.sh
   - travis_fold start "build.python.packages"
-  - python setup.py bdist_wheel sdist --formats=gztar
+  - build_python_package.sh
   - travis_fold end "build.python.packages"
   - travis_fold start "build.docker.images"
   - ./dockerfiles/build-docker-image.sh "$DOCKER_USERNAME" "$DOCKER_TEMP_TAG" ./dist/analyze-restful-api-load-test-results-*.*.*.tar.gz
