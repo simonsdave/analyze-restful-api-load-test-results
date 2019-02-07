@@ -48,7 +48,7 @@ setup(
         # only supports Python 3
         'matplotlib==2.2.3',
         'numpy==1.15.3',
-        'python-dateutil==2.7.5',
+        'python-dateutil==2.8.0',
     ],
     include_package_data=True,
     version=version,
