@@ -19,4 +19,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
-- Nothing
+- Travis CI
