@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - dev-env v0.5.14 -> v0.6.1
+- matplotlib 2.2.3 -> 3.1.2
+- numpy 1.15.3 -> 1.17.4
+- python-dateutil 2.8.0 -> 2.8.1
 
 ### Removed
 

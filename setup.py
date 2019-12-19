@@ -44,11 +44,9 @@ setup(
         'bin/analyze_restful_api_load_test_results.sh',
     ],
     install_requires=[
-        # matplotlib 2.2.x is the Python 2 LTS; matplotlib <= 3.0.0
-        # only supports Python 3
-        'matplotlib==2.2.3',
-        'numpy==1.15.3',
-        'python-dateutil==2.8.0',
+        'matplotlib==3.1.2',
+        'numpy==1.17.4',
+        'python-dateutil==2.8.1',
     ],
     include_package_data=True,
     version=version,
@@ -56,4 +54,16 @@ setup(
     author='Dave Simons',
     author_email='simonsdave@gmail.com',
     url='https://github.com/simonsdave/analyze-restful-api-load-test-results',
+    # list of valid classifiers @ https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
 )
