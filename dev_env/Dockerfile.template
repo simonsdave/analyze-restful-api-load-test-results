@@ -1,4 +1,4 @@
-FROM simonsdave/xenial-dev-env:%DEV_ENV_VERSION%
+FROM simonsdave/bionic-dev-env:%DEV_ENV_VERSION%
 
 MAINTAINER Dave Simons
 
@@ -8,20 +8,17 @@ RUN apt-get update -y
 # this list came from https://hub.docker.com/r/aaron465/matplotlib/dockerfile
 RUN apt-get install -y libxft-dev libfreetype6 libfreetype6-dev
 
+RUN mkdir /tmp/package
+ADD package.tar.gz /tmp/package/.
+
+RUN cd /tmp/package && pip3 install --requirement "requirements.txt"
+
 # as per http://stackoverflow.com/questions/29073802/matplotlib-cannot-find-configuration-file-matplotlibrc
 RUN mkdir -p /root/.config/matplotlib
-ADD matplotlibrc /root/.config/matplotlib/matplotlibrc
+ADD /tmp/package/matplotlibrc /root/.config/matplotlib/matplotlibrc
 RUN chown --recursive root:root /root/.config
 
-COPY requirements.txt /tmp/requirements.txt
-COPY setup.py /tmp/setup.py
-RUN mkdir /tmp/analyze_restful_api_load_test_results
-COPY analyze_restful_api_load_test_results/__init__.py /tmp/analyze_restful_api_load_test_results/__init__.py
-RUN mkdir /tmp/bin
-RUN touch /tmp/bin/analyze_restful_api_load_test_results.py
-RUN touch /tmp/bin/analyze_restful_api_load_test_results.sh
-
-RUN cd /tmp && pip install --requirement "/tmp/requirements.txt"
+RUN rm -rf "/tmp/package"
 
 ENV DEBIAN_FRONTEND newt
 
