@@ -1,0 +1,10 @@
+[run]
+branch = True
+include =
+    ./analyze_restful_api_load_test_results/*
+omit =
+    *tests*
+    *__init__*
+
+[html]
+directory = coverage_report
