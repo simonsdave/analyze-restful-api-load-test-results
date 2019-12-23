@@ -26,13 +26,13 @@ class Main(object):
                 success = int(match.group('success'))
                 response_time = float(match.group('response_time'))
 
-                print '%s\t%s\t%d\t%s\t%s' % (
+                print('%s\t%s\t%d\t%s\t%s' % (
                     timestamp,
                     request_type,
                     success,
                     locust_id,
                     response_time,
-                )
+                ))
 
         return 0
 

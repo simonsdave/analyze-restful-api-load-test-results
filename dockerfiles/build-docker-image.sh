@@ -16,10 +16,10 @@ USERNAME=${1:-}
 TAG=${2:-}
 ANALYZE_TAR_GZ=${3:-}
 
-IMAGENAME=$USERNAME/analyze-restful-api-load-test-results:$TAG
+IMAGENAME=${USERNAME}/analyze-restful-api-load-test-results:${TAG}
 
-cp "$ANALYZE_TAR_GZ" "$SCRIPT_DIR_NAME/analyze-restful-api-load-test-results.tar.gz"
-docker build -t "$IMAGENAME" "$SCRIPT_DIR_NAME"
-rm "$SCRIPT_DIR_NAME/analyze-restful-api-load-test-results.tar.gz"
+cp "${ANALYZE_TAR_GZ}" "${SCRIPT_DIR_NAME}/analyze-restful-api-load-test-results.tar.gz"
+docker build -t "${IMAGENAME}" "${SCRIPT_DIR_NAME}"
+rm "${SCRIPT_DIR_NAME}/analyze-restful-api-load-test-results.tar.gz"
 
 exit 0

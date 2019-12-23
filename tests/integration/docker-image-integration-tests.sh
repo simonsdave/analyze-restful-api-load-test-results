@@ -11,11 +11,11 @@ test_analyze_no_graphs() {
         --rm \
         -i \
         "$DOCKER_IMAGE" \
-        analyze_restful_api_load_test_results.sh \
-        < "$SCRIPT_DIR_NAME/data/happy_path_stdin.tsv" \
+        analyze-restful-api-load-test-results.sh \
+        < "$SCRIPT_DIR_NAME/data/happy-path-stdin.tsv" \
         > "$STDOUT"
 
-    diff "$STDOUT" "$SCRIPT_DIR_NAME/data/happy_path_stdout.txt"
+    diff "$STDOUT" "$SCRIPT_DIR_NAME/data/happy-path-stdout.txt"
 
     rm "$STDOUT"
 }
@@ -29,12 +29,12 @@ test_analyze_with_graphs() {
         -i \
         -v "$(dirname "$GRAPH"):/graphs" \
         "$DOCKER_IMAGE" \
-        analyze_restful_api_load_test_results.sh \
+        analyze-restful-api-load-test-results.sh \
         "--graphs=/graphs/$(basename "$GRAPH")" \
-        < "$SCRIPT_DIR_NAME/data/happy_path_stdin.tsv" \
+        < "$SCRIPT_DIR_NAME/data/happy-path-stdin.tsv" \
         > "$STDOUT"
 
-    diff "$STDOUT" "$SCRIPT_DIR_NAME/data/happy_path_stdout.txt"
+    diff "$STDOUT" "$SCRIPT_DIR_NAME/data/happy-path-stdout.txt"
 
     # :TRICKY" implict check that pdf was created - rm will fail
     # and thus this script will fail if the pdf isn't created

@@ -35,13 +35,13 @@ if not version:
     raise Exception('Cannot locate project version number')
 
 setup(
-    name='analyze-restful-api-load-test-results',
+    name='analyze_restful_api_load_test_results',
     packages=[
         'analyze_restful_api_load_test_results',
     ],
     scripts=[
-        'bin/analyze_restful_api_load_test_results.py',
-        'bin/analyze_restful_api_load_test_results.sh',
+        'bin/analyze-restful-api-load-test-results.py',
+        'bin/analyze-restful-api-load-test-results.sh',
     ],
     install_requires=[
         'matplotlib==3.1.2',

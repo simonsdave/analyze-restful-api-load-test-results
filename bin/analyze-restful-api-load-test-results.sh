@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 #
-# analyze_restful_api_load_test_results.py does the real analysis
+# analyze-restful-api-load-test-results.py does the real analysis
 # and if you launch it directly you'll generate a harmless but
 # unsettling warning message. the single purpose of this shell
 # script is to eliminate the warning message.
 #
 # all arguments to this shell script are passed directly and
-# unmodified to analyze_restful_api_load_test_results.py.
+# unmodified to analyze-restful-api-load-test-results.py.
 #
-# analyze_restful_api_load_test_results.py is this script's
+# analyze-restful-api-load-test-results.py is this script's
 # exit code.
 #
 
@@ -22,6 +22,6 @@
 #
 python -c 'import matplotlib.pyplot' >& /dev/null
 
-analyze_restful_api_load_test_results.py "$@"
+analyze-restful-api-load-test-results.py "$@"
 
 exit $?
