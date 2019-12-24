@@ -163,9 +163,10 @@ class Main(object):
             Response.first_timestamp,
             Response.last_timestamp,
         )
-        print('=' * len(overall_title))
+        line = '=' * len(overall_title)
+        print(line)
         print(overall_title)
-        print('=' * len(overall_title))
+        print(line)
         print('')
 
         percentiles = [50, 95, 99]
@@ -230,7 +231,7 @@ class Main(object):
                         response_times_in_buckets[seconds_since_start_bucket] = []
                     response_times_in_buckets[seconds_since_start_bucket].append(response.response_time)
 
-                xs = response_times_in_buckets.keys()
+                xs = [x for x in response_times_in_buckets.keys()]
                 xs.sort()
 
                 tabloid_width = 17
