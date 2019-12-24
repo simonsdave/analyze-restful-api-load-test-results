@@ -42,9 +42,9 @@ RUN apt-get install -y python3-pip
 # RUN apt-get install -y python python-dev python-pip libxft-dev libfreetype6 libfreetype6-dev
 # RUN pip install --upgrade pip
 
-COPY analyze-restful-api-load-test-results.tar.gz /tmp/analyze-restful-api-load-test-results.tar.gz
-RUN pip3 install /tmp/analyze-restful-api-load-test-results.tar.gz
-RUN rm /tmp/analyze-restful-api-load-test-results.tar.gz
+COPY package.tar.gz /tmp/package.tar.gz
+RUN pip3 install /tmp/package.tar.gz
+RUN rm /tmp/package.tar.gz
 
 # as per http://stackoverflow.com/questions/29073802/matplotlib-cannot-find-configuration-file-matplotlibrc
 RUN mkdir -p /root/.config/matplotlib
