@@ -2,11 +2,6 @@
 
 import sys
 
-import dateutil.parser
-import numpy
-from matplotlib.backends.backend_pdf import PdfPages
-import matplotlib.pyplot as plt
-
 from analyze_restful_api_load_test_results import CommandLineParser
 from analyze_restful_api_load_test_results import Main
 
