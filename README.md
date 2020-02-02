@@ -1,4 +1,5 @@
 # analyze-restful-api-load-test-results
+
 ![Maintained](https://img.shields.io/maintenance/yes/2020.svg?style=flat)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 ![Python 2.7](https://img.shields.io/badge/python-2.7-FFC100.svg?style=flat)
@@ -19,22 +20,22 @@ These tools can easily drive load into a microservice.
 The real challenge is the automated assessment of the load test results
 and this is where ```analyze-restful-api-load-test-results``` helps.
 
-# Process Overview
+## Process Overview
 
 * drive load through the microservice using your favorite load
-testing tool and produce a [TSV](https://en.wikipedia.org/wiki/Tab-separated_values)
-file containing timing and success for each requests issued during the
-load test
+  testing tool and produce a [TSV](https://en.wikipedia.org/wiki/Tab-separated_values)
+  file containing timing and success for each requests issued during the
+  load test
 * in the context of a CI pipeline, ```analyze-restful-api-load-test-results```
-can be configured to numerically analyze the microservice's performance
-and produce a failing exit code if the performance falls outside of acceptable
-bounds
+  can be configured to numerically analyze the microservice's performance
+  and produce a failing exit code if the performance falls outside of acceptable
+  bounds
 * run ```analyze-restful-api-load-test-results``` can optionally
-be configured to graphically assess the microservice's performance - saving
-the graphical assessment as a build artifact can prove useful when attempting
-to assess a numerical assessment failure
+  be configured to graphically assess the microservice's performance - saving
+  the graphical assessment as a build artifact can prove useful when attempting
+  to assess a numerical assessment failure
 
-# Input File Format
+## Input File Format
 
 The [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) file as
 input for ```analyze-restful-api-load-test-results``` should be UTF8 encoded
@@ -43,14 +44,14 @@ and contain the fields below separated by a single tab.
 
 * timestamp
 * request type - typically this is going to be an HTTP verb but
-it can be any non-blank string
+  it can be any non-blank string
 * success flag - 1 = success; 0 = failure
 * client identifier - a non-blank string - only used to enable ```analyze-restful-api-load-test-results```
-to calculate concurrency levels - for [locust](http://locust.io) it's typically
-a locust ID and for [k6](https://k6.io) it's a VU id
+  to calculate concurrency levels - for [locust](http://locust.io) it's typically
+  a locust ID and for [k6](https://k6.io) it's a VU id
 * response time in milliseconds - a floating point number
 
-# Running ```analyze-restful-api-load-test-results```
+## Running ```analyze-restful-api-load-test-results```
 
 ```analyze-restful-api-load-test-results``` is packaged in a docker image.
 Why? [NumPy](http://www.numpy.org) and [Matplotlib](http://matplotlib.org)
@@ -68,7 +69,7 @@ The following command runs ```analyze-restful-api-load-test-results```'s
 numerical analysis on [this](samples/001-input.tsv) sample data.
 
 ```bash
->docker run \
+~> docker run \
     -i \
     simonsdave/analyze-restful-api-load-test-results \
     analyze_restful_api_load_test_results.sh \
@@ -83,7 +84,7 @@ GET                       17017     0    0.0551      293      106      290      
 PUT                        4409     0    0.0351      531      257      508      765     1131     1748
 
 =====================================================================================
->
+~>
 ```
 
 The following command runs ```analyze-restful-api-load-test-results```'s
@@ -91,7 +92,7 @@ numerical and graphical analysis. The graphical analysis creates a PDF doc
 called ```dave.pdf``` in the working directory.
 
 ```bash
->docker run \
+~> docker run \
     -i \
     -v $PWD:/graphs \
     simonsdave/analyze-restful-api-load-test-results \
@@ -108,7 +109,7 @@ GET                       17017     0    0.0551      293      106      290      
 PUT                        4409     0    0.0351      531      257      508      765     1131     1748
 
 =====================================================================================
->
+~>
 ```
 
 The ```dave.pdf``` doc will contain 1 page per request type. Each page will
