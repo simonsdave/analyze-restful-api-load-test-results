@@ -26,9 +26,6 @@ jobs:
           paths:
             - ./env
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-      # - run:
-      # name: Run Pip Check
-      # command: run-pip-check.sh
       - run:
           name: Lint Python Files
           command: run-flake8.sh
@@ -37,10 +34,16 @@ jobs:
           command: run-bandit.sh
       - run:
           name: Lint Shell Scripts
-          command: run-shelllint.sh
+          command: run-shelllint.sh --verbose
+      - run:
+          name: Lint Markdown Files
+          command: run-markdownlint.sh --verbose
       - run:
           name: Lint YAML Files
-          command: run-yamllint.sh
+          command: run-yamllint.sh --verbose
+      - run:
+          name: Lint JSON Files
+          command: run-jsonlint.sh --verbose
       - run:
           name: Scan repo for passwords, private keys, etc.
           command: run-repo-security-scanner.sh
@@ -50,6 +53,9 @@ jobs:
       - run:
           name: Upload Unit Test Coverage Data to Codecov
           command: codecov
+      - run:
+          name: Build README.rst
+          command: build-readme-dot-rst.sh
       - run:
           name: Build python packages
           command: build-python-package.sh
@@ -72,7 +78,8 @@ jobs:
             fi
 
 workflows:
-  build_test_and_deploy:
+  version: 2
+  commit:
     jobs:
       - build_test_and_deploy:
           context: analyze-restful-api-load-test-results
