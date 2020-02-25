@@ -11,7 +11,7 @@ RUN apt-get install -y libxft-dev libfreetype6 libfreetype6-dev
 RUN mkdir /tmp/package
 ADD package.tar.gz /tmp/package/.
 
-RUN cd /tmp/package && pip3 install --requirement "requirements.txt"
+RUN cd /tmp/package && python3.7 -m pip install --requirement requirements.txt
 
 # as per http://stackoverflow.com/questions/29073802/matplotlib-cannot-find-configuration-file-matplotlibrc
 RUN mkdir -p /root/.config/matplotlib

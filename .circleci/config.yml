@@ -6,7 +6,7 @@ executors:
     environment:
       DOCKER_TEMP_IMAGE: simonsdave/analyze-restful-api-load-test-results:bindle
     docker:
-      - image: simonsdave/bionic-dev-env:v0.6.5
+      - image: simonsdave/bionic-dev-env:v0.6.7
 
 jobs:
   build_test_and_deploy:
@@ -26,6 +26,9 @@ jobs:
           paths:
             - ./env
           key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run:
+          name: Run pip check
+          command: run-pip-check.sh
       - run:
           name: Lint Python Files
           command: run-flake8.sh
