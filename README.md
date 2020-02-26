@@ -24,7 +24,7 @@ and this is where ```analyze-restful-api-load-test-results``` helps.
 
 * drive load through the microservice using your favorite load
   testing tool and produce a [TSV](https://en.wikipedia.org/wiki/Tab-separated_values)
-  file containing timing and success for each requests issued during the
+  file containing timing and success for each request issued during the
   load test
 * in the context of a CI pipeline, ```analyze-restful-api-load-test-results```
   can be configured to numerically analyze the microservice's performance
@@ -37,8 +37,9 @@ and this is where ```analyze-restful-api-load-test-results``` helps.
 
 ## Input File Format
 
-The [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) file as
-input for ```analyze-restful-api-load-test-results``` should be UTF8 encoded
+The [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) file is
+input for ```analyze-restful-api-load-test-results```.
+The file should be UTF8 encoded
 and contain the fields below separated by a single tab.
 [This](samples/001-input.tsv) is a sample input file.
 
