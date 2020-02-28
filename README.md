@@ -6,7 +6,7 @@
 [![Requirements Status](https://requires.io/github/simonsdave/analyze-restful-api-load-test-results/requirements.svg?branch=master)](https://requires.io/github/simonsdave/analyze-restful-api-load-test-results/requirements/?branch=master)
 [![CircleCI](https://circleci.com/gh/simonsdave/analyze-restful-api-load-test-results/tree/master.svg?style=shield)](https://circleci.com/gh/simonsdave/analyze-restful-api-load-test-results/tree/master)
 [![codecov](https://codecov.io/gh/simonsdave/analyze-restful-api-load-test-results/branch/master/graph/badge.svg)](https://codecov.io/gh/simonsdave/analyze-restful-api-load-test-results)
-[![docker-simonsdave/analyze-restful-api-load-test-results](https://img.shields.io/badge/docker-simonsdave%2Fanalyze%20restful%20api%20load%20test%20results-blue.svg)](https://hub.docker.com/r/simonsdave/analyze-restful-api-load-test-results/)
+[![docker-simonsdave/analyze-restful-api-load-test-results](https://img.shields.io/badge/docker-simonsdave%2Fanalyze--restful--api--load--test--results-blue.svg)](https://hub.docker.com/r/simonsdave/analyze-restful-api-load-test-results/)
 
 As part of a microservice's CI process it's ideal to
 load test a microservice's RESTful API to confirm
