@@ -30,7 +30,7 @@ class CommandLineParser(optparse.OptionParser):
             type='float',
             help=help_msg)
 
-        default = None
+        default = '/dev/null'
         help_msg = 'pdf filename for graphs - default = %s' % default
         self.add_option(
             '--graphs',

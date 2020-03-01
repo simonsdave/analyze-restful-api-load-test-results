@@ -60,21 +60,22 @@ are used by ```analyze-restful-api-load-test-results```
 for numeric and graphical assessment of a microservice's performance.
 Both these packages take a long time to install.
 A CI pipeline should execute in the minimum time possible
-and thus installing [NumPy](http://www.numpy.org) and [Matplotlib](http://matplotlib.org)
+and installing [NumPy](http://www.numpy.org) and [Matplotlib](http://matplotlib.org)
 would unacceptably increase CI pipeline execution time.
 Packaging ```analyze-restful-api-load-test-results``` in a docker image
 means the CI pipeline only has to download the docker image which is
 generally quite quick.
 
 The following command runs ```analyze-restful-api-load-test-results```'s
-numerical analysis on [this](samples/001-input.tsv) sample data.
+numerical analysis.
 
 ```bash
-~> docker run \
+~> docker container run \
+    --rm \
     -i \
-    simonsdave/analyze-restful-api-load-test-results \
+    simonsdave/analyze-restful-api-load-test-results:latest \
     analyze-restful-api-load-test-results.sh \
-    < 001-input.tsv
+    < samples/001-input.tsv
 =====================================================================================
 21,426 @ 25 from 2017-07-19 01:25:02.410082+00:00 to 2017-07-19 01:30:02.245437+00:00
 =====================================================================================
@@ -89,17 +90,18 @@ PUT                        4409     0    0.0351      531      257      508      
 ```
 
 The following command runs ```analyze-restful-api-load-test-results```'s
-numerical and graphical analysis. The graphical analysis creates a PDF doc
-called ```dave.pdf``` in the working directory.
+numerical and graphical analysis.
+The graphical analysis creates a PDF doc called ```/tmp/dave.pdf```
+which can be copied out of the container using ```docker container cp```.
 
 ```bash
-~> docker run \
+~> docker container run \
+    -name graphs
     -i \
-    -v $PWD:/graphs \
-    simonsdave/analyze-restful-api-load-test-results \
+    simonsdave/analyze-restful-api-load-test-results:latest \
     analyze-restful-api-load-test-results.sh \
-    --graphs=/graphs/dave.pdf \
-    < 001-input.tsv
+    --graphs=/tmp/graphs.pdf \
+    < samples/001-input.tsv
 =====================================================================================
 21,426 @ 25 from 2017-07-19 01:25:02.410082+00:00 to 2017-07-19 01:30:02.245437+00:00
 =====================================================================================
@@ -110,11 +112,13 @@ GET                       17017     0    0.0551      293      106      290      
 PUT                        4409     0    0.0351      531      257      508      765     1131     1748
 
 =====================================================================================
+~> docker container cp graphs:/tmp/graphs.pdf .
+~> docker container rm graphs
 ~>
 ```
 
-The ```dave.pdf``` doc will contain 1 page per request type. Each page will
-contain a single graph that looks like the graph below and a sample of the
-full PDF can be found [here](samples/001-input.pdf).
+The graphical analysis in ```dave.pdf``` will contain 1 page per request type.
+Each page will contain a single graph that looks like the graph below.
+A sample of the full analysis can be found [here](samples/001-input.pdf).
 
 ![](samples/001-input.png)

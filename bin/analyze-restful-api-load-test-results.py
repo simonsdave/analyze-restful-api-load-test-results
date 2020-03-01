@@ -13,8 +13,5 @@ if __name__ == '__main__':
     main = Main()
     main.load_data()
     exit_code = main.numerical_analysis(clo.max_slope)
-
-    if clo.graphs:
-        main.generate_graphs(clo.graphs)
-
+    main.generate_graphs(clo.graphs)
     sys.exit(exit_code)

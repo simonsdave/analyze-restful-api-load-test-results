@@ -20,7 +20,7 @@ class TestCommandLineParser(unittest.TestCase):
             (clo, cla) = clp.parse_args()
 
             self.assertEqual(type(clo.max_slope), float)
-            self.assertIsNone(clo.graphs)
+            self.assertEqual(clo.graphs, '/dev/null')
 
     def test_max_slope_arg(self):
         max_slope = 5.6
@@ -29,7 +29,7 @@ class TestCommandLineParser(unittest.TestCase):
             (clo, cla) = clp.parse_args()
 
             self.assertEqual(clo.max_slope, max_slope)
-            self.assertIsNone(clo.graphs)
+            self.assertEqual(clo.graphs, '/dev/null')
 
     def test_graphs_arg(self):
         filename = uuid.uuid4().hex
