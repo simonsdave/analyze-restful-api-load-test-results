@@ -73,7 +73,7 @@ numerical analysis on [this](samples/001-input.tsv) sample data.
 ~> docker run \
     -i \
     simonsdave/analyze-restful-api-load-test-results \
-    analyze_restful_api_load_test_results.sh \
+    analyze-restful-api-load-test-results.sh \
     < 001-input.tsv
 =====================================================================================
 21,426 @ 25 from 2017-07-19 01:25:02.410082+00:00 to 2017-07-19 01:30:02.245437+00:00
@@ -97,7 +97,7 @@ called ```dave.pdf``` in the working directory.
     -i \
     -v $PWD:/graphs \
     simonsdave/analyze-restful-api-load-test-results \
-    analyze_restful_api_load_test_results.sh \
+    analyze-restful-api-load-test-results.sh \
     --graphs=/graphs/dave.pdf \
     < 001-input.tsv
 =====================================================================================
