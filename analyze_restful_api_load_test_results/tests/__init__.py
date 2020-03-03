@@ -9,6 +9,7 @@ import dateutil
 import mock
 
 from .. import CommandLineParser
+from .. import Main
 from .. import Response
 
 
@@ -75,3 +76,23 @@ class TestResponse(unittest.TestCase):
         self.assertEqual(response.success, success)
         self.assertEqual(response.vu, vu)
         self.assertEqual(response.response_time, response_time)
+
+
+class TestMainLoadData(unittest.TestCase):
+
+    def test_happy_path(self):
+        responses_data = [
+            '2017-07-19T01:25:00.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:01.00000000Z\tPUT\t1\t1\t200',
+            '2017-07-19T01:25:02.00000000Z\tPUT\t1\t1\t300',
+            '2017-07-19T01:25:03.00000000Z\tPUT\t1\t1\t400',
+            '2017-07-19T01:25:04.00000000Z\tPUT\t1\t1\t500',
+            '2017-07-19T01:25:05.00000000Z\tPUT\t1\t1\t600',
+            '2017-07-19T01:25:06.00000000Z\tPUT\t1\t1\t700',
+            '2017-07-19T01:25:07.00000000Z\tPUT\t1\t1\t800',
+            '2017-07-19T01:25:08.00000000Z\tPUT\t1\t1\t900',
+            '2017-07-19T01:25:09.00000000Z\tPUT\t1\t1\t900',
+        ]
+        with mock.patch('sys.stdin', responses_data):
+            main = Main()
+            main.load_data()

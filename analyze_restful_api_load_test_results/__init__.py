@@ -124,20 +124,21 @@ class Response(object):
 
 class Main(object):
 
-    # r'^\s*\[(?P<timestamp>.*)\].*:\s+'
     def load_data(self):
         reg_ex_pattern = (
             r'^\s*'
             r'(?P<timestamp>.+)\t'
             r'(?P<request_type>.+)\t'
-            r'(?P<success>\d)\t'
+            r'(?P<success>\d{1})\t'
             r'(?P<vu>.+)\t'
-            r'(?P<response_time>\d+\.\d+)'
+            r'(?P<response_time>\d*\.\d+|\d+)'
             r'\s*$'
         )
         reg_ex = re.compile(reg_ex_pattern)
 
+        line_number = 0
         for line in sys.stdin:
+            line_number += 1
             try:
                 match = reg_ex.match(line)
                 if match:
@@ -151,9 +152,9 @@ class Main(object):
 
                     Response(request_type, timestamp, success, vu, response_time)
                 else:
-                    print('ERROR: invalid input format - %s' % line.strip())
+                    print('ERROR - %d: invalid input format - %s' % (line_number, line.strip()))
             except Exception as ex:
-                print('ERROR: %s' % ex)
+                print('ERROR - %d: %s' % (line_number, ex))
                 print('>>>%s<<<' % line)
 
     def numerical_analysis(self, max_slope):
@@ -195,7 +196,8 @@ class Main(object):
             responses = Response.responses_for_request_type(request_type)
             seconds_since_start = [response.seconds_since_start for response in responses]
             response_times = [response.response_time for response in responses]
-            m, b = numpy.polyfit(seconds_since_start, response_times, 1)
+            degree_of_the_fitting_polynomial = 1
+            m, b = numpy.polyfit(seconds_since_start, response_times, degree_of_the_fitting_polynomial)
             args = [
                 request_type,
                 len(Response.successes_for_request_type(request_type)),

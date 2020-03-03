@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 SCRIPT_DIR_NAME="$( cd "$( dirname "$0" )" && pwd )"
 
 test_analyze_no_graphs() {
@@ -12,35 +10,46 @@ test_analyze_no_graphs() {
     # implementation.
     STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
 
-    docker run \
+    docker container run \
         --rm \
         -i \
         "${DOCKER_IMAGE}" \
         analyze-restful-api-load-test-results.sh \
         < "${SCRIPT_DIR_NAME}/data/happy-path-stdin.tsv" \
         > "${STDOUT}"
+    RETURN_VALUE=$?
 
-    diff "${STDOUT}" "${SCRIPT_DIR_NAME}/data/happy-path-stdout.txt"
+    if ! diff "${STDOUT}" "${SCRIPT_DIR_NAME}/data/happy-path-stdout.txt"; then
+        RETURN_VALUE=1
+    fi
 
     rm -f "${STDOUT}"
+
+    return ${RETURN_VALUE}
 }
 
 test_analyze_with_graphs() {
+    GRAPHS_CONTAINER_NAME=$(openssl rand -hex 16)
     # :ODD: see above :ODD: notes
     STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
-    GRAPH=${SCRIPT_DIR_NAME}/graph.pdf
 
-    docker run \
-        --rm \
+    docker container run \
+        "--name=${GRAPHS_CONTAINER_NAME}" \
         -i \
-        -v "$(dirname "${GRAPH}"):/graphs" \
         "${DOCKER_IMAGE}" \
         analyze-restful-api-load-test-results.sh \
-        "--graphs=/graphs/$(basename "${GRAPH}")" \
+        "--graphs=/tmp/graphs.pdf" \
         < "${SCRIPT_DIR_NAME}/data/happy-path-stdin.tsv" \
         > "${STDOUT}"
+    RETURN_VALUE=$?
 
-    diff "${STDOUT}" "${SCRIPT_DIR_NAME}/data/happy-path-stdout.txt"
+    if ! diff "${STDOUT}" "${SCRIPT_DIR_NAME}/data/happy-path-stdout.txt"; then
+        RETURN_VALUE=1
+    fi
+
+    docker container cp "${GRAPHS_CONTAINER_NAME}:/tmp/graphs.pdf" "${SCRIPT_DIR_NAME}/graph.pdf"
+    # :QUESTION: is there a way to validate that graph.pdf is a valid pdf doc
+    rm "${SCRIPT_DIR_NAME}/graph.pdf"
 
     # :TRICKY: implict check that pdf was created - rm will fail
     # and thus this script will fail if the pdf isn't created
@@ -48,13 +57,76 @@ test_analyze_with_graphs() {
     rm -f "${GRAPH}"
 
     rm -f "${STDOUT}"
+
+    return ${RETURN_VALUE}
+}
+
+test_steep_slope() {
+    # :ODD: Normally you'd expect the line below to be something like
+    # "STDOUT=$(mktemp)" but when that was used the error "The path /var/<something>
+    # is not shared from OS X and is not known to Docker" was generated
+    # and could not figure out what the problem and hence the current
+    # implementation.
+    STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
+
+    docker container run \
+        --rm \
+        -i \
+        "${DOCKER_IMAGE}" \
+        analyze-restful-api-load-test-results.sh \
+        < "${SCRIPT_DIR_NAME}/data/steep-slope-stdin.tsv" \
+        > "${STDOUT}"
+    if [[ $? == 1 ]]; then
+        RETURN_VALUE=0
+    else
+        RETURN_VALUE=1
+    fi
+
+    if ! diff "${STDOUT}" "${SCRIPT_DIR_NAME}/data/steep-slope-stdout.txt"; then
+        RETURN_VALUE=1
+    fi
+
+    rm -f "${STDOUT}"
+
+    return ${RETURN_VALUE}
+}
+
+test_bad_input() {
+    # :ODD: Normally you'd expect the line below to be something like
+    # "STDOUT=$(mktemp)" but when that was used the error "The path /var/<something>
+    # is not shared from OS X and is not known to Docker" was generated
+    # and could not figure out what the problem and hence the current
+    # implementation.
+    STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
+
+    docker container run \
+        --rm \
+        -i \
+        "${DOCKER_IMAGE}" \
+        analyze-restful-api-load-test-results.sh \
+        < "${SCRIPT_DIR_NAME}/data/bad-stdin.tsv" \
+        > "${STDOUT}"
+    RETURN_VALUE=$?
+
+    if ! diff "${STDOUT}" "${SCRIPT_DIR_NAME}/data/bad-stdout.txt"; then
+        RETURN_VALUE=1
+    fi
+
+    rm -f "${STDOUT}"
+
+    return ${RETURN_VALUE}
 }
 
 test_wrapper() {
     TEST_FUNCTION_NAME=${1:-}
+    shift
     NUMBER_TESTS_RUN=$((NUMBER_TESTS_RUN+1))
     echo -n "."
-    "$TEST_FUNCTION_NAME"
+    if "${TEST_FUNCTION_NAME}" "$@"; then
+        NUMBER_TEST_SUCCESSES=$((NUMBER_TEST_SUCCESSES+1))
+    else
+        NUMBER_TEST_FAILURES=$((NUMBER_TEST_FAILURES+1))
+    fi
 }
 
 if [ $# != 1 ]; then
@@ -64,10 +136,27 @@ fi
 
 DOCKER_IMAGE=${1:-}
 
+#
+# test_wrapper function will update these environment variables
+# so we can generate a reasonable status message after running
+# all the integration tests
+#
 NUMBER_TESTS_RUN=0
+NUMBER_TEST_SUCCESSES=0
+NUMBER_TEST_FAILURES=0
+
+#
+# all the setup is done - time to run some tests!
+#
 test_wrapper test_analyze_no_graphs
 test_wrapper test_analyze_with_graphs
+test_wrapper test_steep_slope
+test_wrapper test_bad_input
+
+#
+# all the tests are complete - generate a reasonable status message
+#
 echo ""
-echo "Successfully completed ${NUMBER_TESTS_RUN} integration tests."
+echo "Ran ${NUMBER_TESTS_RUN} integration tests. ${NUMBER_TEST_SUCCESSES} successes. ${NUMBER_TEST_FAILURES} failures."
 
 exit 0
