@@ -159,4 +159,12 @@ test_wrapper test_bad_input
 echo ""
 echo "Ran ${NUMBER_TESTS_RUN} integration tests. ${NUMBER_TEST_SUCCESSES} successes. ${NUMBER_TEST_FAILURES} failures."
 
+#
+# and we're done:-)
+#
+if [[ "${NUMBER_TEST_FAILURES}" != "0" ]]; then
+    exit 1
+fi
+
+exit 0
 exit 0
