@@ -3,12 +3,8 @@
 SCRIPT_DIR_NAME="$( cd "$( dirname "$0" )" && pwd )"
 
 test_analyze_no_graphs() {
-    # :ODD: Normally you'd expect the line below to be something like
-    # "STDOUT=$(mktemp)" but when that was used the error "The path /var/<something>
-    # is not shared from OS X and is not known to Docker" was generated
-    # and could not figure out what the problem and hence the current
-    # implementation.
-    STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
+    STDOUT=${1:-}
+    shift
 
     docker container run \
         --rm \
@@ -23,15 +19,14 @@ test_analyze_no_graphs() {
         RETURN_VALUE=1
     fi
 
-    rm -f "${STDOUT}"
-
     return ${RETURN_VALUE}
 }
 
 test_analyze_with_graphs() {
+    STDOUT=${1:-}
+    shift
+
     GRAPHS_CONTAINER_NAME=$(openssl rand -hex 16)
-    # :ODD: see above :ODD: notes
-    STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
 
     docker container run \
         "--name=${GRAPHS_CONTAINER_NAME}" \
@@ -56,18 +51,12 @@ test_analyze_with_graphs() {
     # :TODO: how do we know the graph is a pdf and accurate?
     rm -f "${GRAPH}"
 
-    rm -f "${STDOUT}"
-
     return ${RETURN_VALUE}
 }
 
 test_steep_slope() {
-    # :ODD: Normally you'd expect the line below to be something like
-    # "STDOUT=$(mktemp)" but when that was used the error "The path /var/<something>
-    # is not shared from OS X and is not known to Docker" was generated
-    # and could not figure out what the problem and hence the current
-    # implementation.
-    STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
+    STDOUT=${1:-}
+    shift
 
     docker container run \
         --rm \
@@ -86,18 +75,12 @@ test_steep_slope() {
         RETURN_VALUE=1
     fi
 
-    rm -f "${STDOUT}"
-
     return ${RETURN_VALUE}
 }
 
 test_bad_input() {
-    # :ODD: Normally you'd expect the line below to be something like
-    # "STDOUT=$(mktemp)" but when that was used the error "The path /var/<something>
-    # is not shared from OS X and is not known to Docker" was generated
-    # and could not figure out what the problem and hence the current
-    # implementation.
-    STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
+    STDOUT=${1:-}
+    shift
 
     docker container run \
         --rm \
@@ -112,21 +95,34 @@ test_bad_input() {
         RETURN_VALUE=1
     fi
 
-    rm -f "${STDOUT}"
-
     return ${RETURN_VALUE}
 }
 
 test_wrapper() {
     TEST_FUNCTION_NAME=${1:-}
     shift
+
+    # :ODD: Normally you'd expect the line below to be something like
+    # "STDOUT=$(mktemp)" but when that was used the error "The path /var/<something>
+    # is not shared from OS X and is not known to Docker" was generated
+    # and could not figure out what the problem and hence the current
+    # implementation.
+    STDOUT=${SCRIPT_DIR_NAME}/stdout.txt
+
     NUMBER_TESTS_RUN=$((NUMBER_TESTS_RUN+1))
     echo -n "."
-    if "${TEST_FUNCTION_NAME}" "$@"; then
+    if "${TEST_FUNCTION_NAME}" "${STDOUT}" "$@"; then
         NUMBER_TEST_SUCCESSES=$((NUMBER_TEST_SUCCESSES+1))
     else
         NUMBER_TEST_FAILURES=$((NUMBER_TEST_FAILURES+1))
+
+        echo ""
+        echo "${TEST_FUNCTION_NAME} failed - >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        cat "${STDOUT}"
+        echo "${TEST_FUNCTION_NAME} failed - <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
     fi
+
+    rm -f "${STDOUT}"
 }
 
 if [ $# != 1 ]; then
