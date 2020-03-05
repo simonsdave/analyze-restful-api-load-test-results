@@ -49,82 +49,79 @@ class CommandLineParser(optparse.OptionParser):
 
 class Response(object):
 
-    first_timestamp = datetime.datetime(2990, 1, 1).replace(tzinfo=dateutil.tz.tzutc())
-    last_timestamp = datetime.datetime(1990, 1, 1).replace(tzinfo=dateutil.tz.tzutc())
-
-    responses = []
-
-    responses_by_request_type = {}
-
-    responses_by_vus = {}
-
-    @classmethod
-    def request_types(cls):
-        return [request_type for request_type in cls.responses_by_request_type.keys()]
-
-    @classmethod
-    def responses_for_request_type(cls, request_type):
-        return cls.responses_by_request_type[request_type]
-
-    @classmethod
-    def successes_for_request_type(cls, request_type):
-        return [response for response in cls.responses_by_request_type[request_type] if response.success]
-
-    @classmethod
-    def failures_for_request_type(cls, request_type):
-        return [response for response in cls.responses_by_request_type[request_type] if not response.success]
-
-    # k6 calls them virtual users (vu) and gives each vu a unique integer identifier
-    # locust calls them locusts and gives each one a unique identifier
-    @classmethod
-    def number_of_vus(cls):
-        return len(cls.responses_by_vus.keys())
-
-    @classmethod
-    def total_number_responses(cls):
-        return len(cls.responses)
-
     def __init__(self, request_type, timestamp, success, vu, response_time):
         object.__init__(self)
 
         self.request_type = request_type
         self.timestamp = timestamp
         self.success = success
+        # k6 calls them virtual users (vu) and gives each vu a unique integer identifier
+        # locust calls them locusts and gives each one a unique identifier
         self.vu = vu
         self.response_time = response_time
 
-        type(self).responses.append(self)
+    def get_seconds_since_start(self, responses):
+        return (self.timestamp - responses.first_timestamp).total_seconds()
 
-        if self.request_type not in type(self).responses_by_request_type:
-            type(self).responses_by_request_type[self.request_type] = []
-        type(self).responses_by_request_type[self.request_type].append(self)
-
-        if self.vu not in type(self).responses_by_vus:
-            type(self).responses_by_vus[self.vu] = []
-        type(self).responses_by_vus[self.vu].append(self)
-
-        type(self).first_timestamp = min(self.timestamp, type(self).first_timestamp)
-        type(self).last_timestamp = max(self.timestamp, type(self).last_timestamp)
-
-    @property
-    def seconds_since_start(self):
-        return (self.timestamp - type(self).first_timestamp).total_seconds()
-
-    @property
-    def _bucket_size_in_seconds(self):
-        total_number_seconds_in_test = (type(self).last_timestamp - type(self).first_timestamp).total_seconds()
+    def _get_bucket_size_in_seconds(self, responses):
+        total_number_seconds_in_test = (responses.last_timestamp - responses.first_timestamp).total_seconds()
         total_number_of_buckets_so_things_look_ok = 100
         return total_number_seconds_in_test / total_number_of_buckets_so_things_look_ok
 
-    @property
-    def seconds_since_start_bucket(self):
-        seconds_since_start = int(round(self.seconds_since_start, 0))
-        return seconds_since_start - (seconds_since_start % self._bucket_size_in_seconds)
+    def get_seconds_since_start_bucket(self, responses):
+        seconds_since_start = int(round(self.get_seconds_since_start(responses), 0))
+        return seconds_since_start - (seconds_since_start % self._get_bucket_size_in_seconds(responses))
+
+
+class Responses(object):
+
+    def __init__(self):
+        object.__init__(self)
+
+        self.responses = []
+        self.responses_by_request_type = {}
+        self.responses_by_vus = {}
+        self.first_timestamp = datetime.datetime(2990, 1, 1).replace(tzinfo=dateutil.tz.tzutc())
+        self.last_timestamp = datetime.datetime(1990, 1, 1).replace(tzinfo=dateutil.tz.tzutc())
+
+    def add(self, response):
+        self.responses.append(response)
+
+        if response.request_type not in self.responses_by_request_type:
+            self.responses_by_request_type[response.request_type] = []
+        self.responses_by_request_type[response.request_type].append(response)
+
+        if response.vu not in self.responses_by_vus:
+            self.responses_by_vus[response.vu] = []
+        self.responses_by_vus[response.vu].append(response)
+
+        self.first_timestamp = min(response.timestamp, self.first_timestamp)
+        self.last_timestamp = max(response.timestamp, self.last_timestamp)
+
+    def request_types(self):
+        return [request_type for request_type in self.responses_by_request_type.keys()]
+
+    def responses_for_request_type(self, request_type):
+        return self.responses_by_request_type[request_type]
+
+    def successes_for_request_type(self, request_type):
+        return [response for response in self.responses_by_request_type[request_type] if response.success]
+
+    def failures_for_request_type(self, request_type):
+        return [response for response in self.responses_by_request_type[request_type] if not response.success]
+
+    def number_of_vus(self):
+        return len(self.responses_by_vus.keys())
+
+    def __len__(self):
+        return len(self.responses)
 
 
 class Main(object):
 
     def load_data(self):
+        responses = Responses()
+
         reg_ex_pattern = (
             r'^\s*'
             r'(?P<timestamp>.+)\t'
@@ -150,19 +147,22 @@ class Main(object):
                     vu = match.group('vu')
                     response_time = float(match.group('response_time'))
 
-                    Response(request_type, timestamp, success, vu, response_time)
+                    response = Response(request_type, timestamp, success, vu, response_time)
+                    responses.add(response)
                 else:
                     print('ERROR - %d: invalid input format - %s' % (line_number, line.strip()))
             except Exception as ex:
                 print('ERROR - %d: %s' % (line_number, ex))
                 print('>>>%s<<<' % line)
 
-    def numerical_analysis(self, max_slope):
+        return responses
+
+    def numerical_analysis(self, responses, max_slope):
         overall_title = '%s @ %s from %s to %s' % (
-            '{:,}'.format(Response.total_number_responses()),
-            '{:,}'.format(Response.number_of_vus()),
-            Response.first_timestamp,
-            Response.last_timestamp,
+            '{:,}'.format(len(responses)),
+            '{:,}'.format(responses.number_of_vus()),
+            responses.first_timestamp,
+            responses.last_timestamp,
         )
         line = '=' * len(overall_title)
         print(line)
@@ -172,7 +172,7 @@ class Main(object):
 
         percentiles = [50, 95, 99]
         fmt = '%-25s %5d %5d %9.4f' + '%9.0f' * (2 + len(percentiles) + 1)
-        request_types = Response.request_types()
+        request_types = responses.request_types()
         request_types.sort()
 
         title_fmt = '%-25s %5s %5s ' + '%9s' * (3 + len(percentiles) + 1)
@@ -193,15 +193,20 @@ class Main(object):
         return_value = 0
 
         for request_type in request_types:
-            responses = Response.responses_for_request_type(request_type)
-            seconds_since_start = [response.seconds_since_start for response in responses]
-            response_times = [response.response_time for response in responses]
+            responses_for_request_type = responses.responses_for_request_type(request_type)
+
+            seconds_since_start = [
+                response.get_seconds_since_start(responses) for response in responses_for_request_type
+            ]
+
+            response_times = [response.response_time for response in responses_for_request_type]
+
             degree_of_the_fitting_polynomial = 1
             m, b = numpy.polyfit(seconds_since_start, response_times, degree_of_the_fitting_polynomial)
             args = [
                 request_type,
-                len(Response.successes_for_request_type(request_type)),
-                len(Response.failures_for_request_type(request_type)),
+                len(responses.successes_for_request_type(request_type)),
+                len(responses.failures_for_request_type(request_type)),
                 m,
                 b,
                 min(response_times),
@@ -218,17 +223,17 @@ class Main(object):
 
         return return_value
 
-    def generate_graphs(self, graphs):
+    def generate_graphs(self, responses, graphs):
         with PdfPages(graphs) as pdf:
-            request_types = Response.request_types()
+            request_types = responses.request_types()
             request_types.sort()
 
             for request_type in request_types:
-                responses = Response.responses_for_request_type(request_type)
+                responses_for_request_type = responses.responses_for_request_type(request_type)
 
                 response_times_in_buckets = {}
-                for response in responses:
-                    seconds_since_start_bucket = response.seconds_since_start_bucket
+                for response in responses_for_request_type:
+                    seconds_since_start_bucket = response.get_seconds_since_start_bucket(responses)
                     if seconds_since_start_bucket not in response_times_in_buckets:
                         response_times_in_buckets[seconds_since_start_bucket] = []
                     response_times_in_buckets[seconds_since_start_bucket].append(response.response_time)
@@ -302,13 +307,13 @@ class Main(object):
                     fontsize='large',
                     fontweight='bold')
 
-                hours, remainder = divmod((Response.last_timestamp - Response.first_timestamp).total_seconds(), 3600)
+                hours, remainder = divmod((responses.last_timestamp - responses.first_timestamp).total_seconds(), 3600)
                 minutes, _ = divmod(remainder, 60)
                 title = '%s\n(%.0f%% of %s requests @ %d concurrency for %d hours %d minutes)\n' % (
                     request_type.replace('-', ' '),
-                    (len(responses) * 100.0) / Response.total_number_responses(),
-                    '{:,}'.format(Response.total_number_responses()),
-                    Response.number_of_vus(),
+                    (len(responses) * 100.0) / len(responses),
+                    '{:,}'.format(len(responses)),
+                    responses.number_of_vus(),
                     hours,
                     minutes)
                 plt.title(

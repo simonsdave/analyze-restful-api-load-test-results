@@ -11,7 +11,7 @@ if __name__ == '__main__':
     (clo, cla) = clp.parse_args()
 
     main = Main()
-    main.load_data()
-    exit_code = main.numerical_analysis(clo.max_slope)
-    main.generate_graphs(clo.graphs)
+    responses = main.load_data()
+    exit_code = main.numerical_analysis(responses, clo.max_slope)
+    main.generate_graphs(responses, clo.graphs)
     sys.exit(exit_code)
