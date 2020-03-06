@@ -158,6 +158,7 @@ class Main(object):
         return responses
 
     def numerical_analysis(self, responses, max_slope):
+        """Returns 0 on success and 1 on failure."""
         overall_title = '%s @ %s from %s to %s' % (
             '{:,}'.format(len(responses)),
             '{:,}'.format(responses.number_of_vus()),

@@ -11,6 +11,7 @@ import mock
 from .. import CommandLineParser
 from .. import Main
 from .. import Response
+from .. import Responses
 
 
 class TestCommandLineParser(unittest.TestCase):
@@ -78,10 +79,36 @@ class TestResponse(unittest.TestCase):
         self.assertEqual(response.response_time, response_time)
 
 
+class TestResponses(unittest.TestCase):
+
+    def test_ctr(self):
+        responses = Responses()
+
+        self.assertEqual(responses.responses, [])
+        self.assertEqual(responses.responses_by_request_type, {})
+        self.assertEqual(responses.responses_by_vus, {})
+        self.assertIsNotNone(responses.first_timestamp)
+        self.assertIsNotNone(responses.last_timestamp)
+
+    def test_add(self):
+        vu = 'bc463d3dc4ab433b9f53de322f0c7138'
+
+        response = Response(
+            'PUT',
+            datetime.datetime(2019, 3, 26).replace(tzinfo=dateutil.tz.tzutc()),
+            1,
+            vu,
+            6.77)
+
+        responses = Responses()
+        responses.add(response)
+        self.assertTrue(1 == len(responses))
+
+
 class TestMainLoadData(unittest.TestCase):
 
     def test_happy_path(self):
-        responses_data = [
+        responses_data_ok = [
             '2017-07-19T01:25:00.00000000Z\tPUT\t1\t1\t100',
             '2017-07-19T01:25:01.00000000Z\tPUT\t1\t1\t200',
             '2017-07-19T01:25:02.00000000Z\tPUT\t1\t1\t300',
@@ -93,6 +120,52 @@ class TestMainLoadData(unittest.TestCase):
             '2017-07-19T01:25:08.00000000Z\tPUT\t1\t1\t900',
             '2017-07-19T01:25:09.00000000Z\tPUT\t1\t1\t900',
         ]
+
+        responses_data_bad = [
+            '',                         # just invalid data
+            'Z\tPUT\t1\t1\t900',        # should throw exception
+        ]
+
+        responses_data = responses_data_ok.copy()
+        responses_data.extend(responses_data_bad)
+
         with mock.patch('sys.stdin', responses_data):
             main = Main()
-            main.load_data()
+            responses = main.load_data()
+            self.assertEqual(len(responses_data_ok), len(responses))
+
+
+class TestMainNumericalAnalysis(unittest.TestCase):
+
+    def test_happy_path(self):
+        responses_data = [
+            '2017-07-19T01:25:00.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:01.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:02.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:03.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:04.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:05.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:06.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:07.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:08.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:09.00000000Z\tPUT\t1\t1\t100',
+        ]
+
+        with mock.patch('sys.stdin', responses_data):
+            main = Main()
+            responses = main.load_data()
+            numerical_analysis_return_value = main.numerical_analysis(responses, 10)
+            self.assertEqual(0, numerical_analysis_return_value)
+
+    def test_slope_too_big(self):
+        # these 2 points generate a slope of 11.1111
+        responses_data = [
+            '2017-07-19T01:25:00.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:09.00000000Z\tPUT\t1\t1\t200',
+        ]
+
+        with mock.patch('sys.stdin', responses_data):
+            main = Main()
+            responses = main.load_data()
+            numerical_analysis_return_value = main.numerical_analysis(responses, 10)
+            self.assertEqual(1, numerical_analysis_return_value)
