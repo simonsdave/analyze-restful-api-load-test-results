@@ -169,3 +169,27 @@ class TestMainNumericalAnalysis(unittest.TestCase):
             responses = main.load_data()
             numerical_analysis_return_value = main.numerical_analysis(responses, 10)
             self.assertEqual(1, numerical_analysis_return_value)
+
+
+class TestMainGenerateGraphs(unittest.TestCase):
+
+    def test_happy_path(self):
+        responses_data = [
+            '2017-07-19T01:25:00.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:01.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:02.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:03.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:04.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:05.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:06.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:07.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:08.00000000Z\tPUT\t1\t1\t100',
+            '2017-07-19T01:25:09.00000000Z\tPUT\t1\t1\t100',
+        ]
+
+        with mock.patch('sys.stdin', responses_data):
+            main = Main()
+            responses = main.load_data()
+            numerical_analysis_return_value = main.numerical_analysis(responses, 10)
+            self.assertEqual(0, numerical_analysis_return_value)
+            main.generate_graphs(responses, '/dev/null')
