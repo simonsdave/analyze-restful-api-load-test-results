@@ -2,3 +2,5 @@ env
 .coverage
 coverage_report
 dist
+.DS_Store
+README.rst
