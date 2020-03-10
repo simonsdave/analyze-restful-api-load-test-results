@@ -4,6 +4,7 @@
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 [![Requirements Status](https://requires.io/github/simonsdave/analyze-restful-api-load-test-results/requirements.svg?branch=master)](https://requires.io/github/simonsdave/analyze-restful-api-load-test-results/requirements/?branch=master)
+[![CodeFactor](https://www.codefactor.io/repository/github/simonsdave/analyze-restful-api-load-test-results/badge/master)](https://www.codefactor.io/repository/github/simonsdave/analyze-restful-api-load-test-results/overview/master)
 [![CircleCI](https://circleci.com/gh/simonsdave/analyze-restful-api-load-test-results/tree/master.svg?style=shield)](https://circleci.com/gh/simonsdave/analyze-restful-api-load-test-results/tree/master)
 [![codecov](https://codecov.io/gh/simonsdave/analyze-restful-api-load-test-results/branch/master/graph/badge.svg)](https://codecov.io/gh/simonsdave/analyze-restful-api-load-test-results)
 [![docker-simonsdave/analyze-restful-api-load-test-results](https://img.shields.io/badge/docker-simonsdave%2Fanalyze--restful--api--load--test--results-blue.svg)](https://hub.docker.com/r/simonsdave/analyze-restful-api-load-test-results/)
