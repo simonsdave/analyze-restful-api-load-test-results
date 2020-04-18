@@ -69,6 +69,9 @@ jobs:
       - run:
           name: Test docker image
           command: tests/integration/docker-image-integration-tests.sh "${DOCKER_TEMP_IMAGE}"
+      - run:
+          name: Run vulnerability assessment on docker image
+          command: curl -s -L https://raw.githubusercontent.com/simonsdave/clair-cicd/master/bin/assess-image-risk.sh | bash -s -- --verbose --whitelist 'json://{"ignoreSevertiesAtOrBelow": "medium"}' "${DOCKER_TEMP_IMAGE}"
       - deploy:
           name: Push docker image to dockerhub
           command: |
