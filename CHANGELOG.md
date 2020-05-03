@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - dev-env v0.5.14 -> v0.6.9 (which include Python 2.7 -> Python 3.7)
 - matplotlib 2.2.3 -> 3.2.1
-- numpy 1.15.3 -> 1.18.3
+- numpy 1.15.3 -> 1.18.4
 - python-dateutil 2.8.0 -> 2.8.1
 - added markdown and json linting to CircleCI pipeline
 - added README.rst building to CircleCI pipeline
