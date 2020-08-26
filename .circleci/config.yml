@@ -6,7 +6,7 @@ executors:
     environment:
       DOCKER_TEMP_IMAGE: simonsdave/analyze-restful-api-load-test-results:bindle
     docker:
-      - image: simonsdave/bionic-dev-env:v0.6.9
+      - image: simonsdave/bionic-dev-env:v0.6.11
 
 jobs:
   build_test_and_deploy:
