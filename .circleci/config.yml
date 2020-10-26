@@ -7,6 +7,9 @@ executors:
       DOCKER_TEMP_IMAGE: simonsdave/analyze-restful-api-load-test-results:bindle
     docker:
       - image: simonsdave/bionic-dev-env:v0.6.11
+        auth:
+          username: $DOCKER_EXECUTOR_DOCKERHUB_USERNAME
+          password: $DOCKER_EXECUTOR_DOCKERHUB_PASSWORD
 
 jobs:
   build_test_and_deploy:
@@ -87,4 +90,6 @@ workflows:
   commit:
     jobs:
       - build_test_and_deploy:
-          context: analyze-restful-api-load-test-results
+          context:
+            - analyze-restful-api-load-test-results
+            - docker-executor
