@@ -45,7 +45,7 @@ setup(
     ],
     install_requires=[
         'matplotlib==3.5.1',
-        'numpy==1.21.2',
+        'numpy==1.21.5',
         'python-dateutil>=2.8,<2.9',
     ],
     include_package_data=True,
