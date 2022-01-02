@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - python-dateutil 2.8.0 -> 2.8.1
 - added markdown and json linting to CircleCI pipeline
 - added README.rst building to CircleCI pipeline
+- added 2022 to LICENSE
 
 ### Removed
 
