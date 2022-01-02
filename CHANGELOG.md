@@ -29,3 +29,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 
 - Travis CI
+- removed LGTM from main README.md
