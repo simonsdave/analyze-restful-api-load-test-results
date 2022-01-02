@@ -6,7 +6,7 @@ executors:
     environment:
       DOCKER_TEMP_IMAGE: simonsdave/analyze-restful-api-load-test-results:bindle
     docker:
-      - image: simonsdave/bionic-dev-env:v0.6.14
+      - image: simonsdave/focal-dev-env:v0.6.17
         auth:
           username: $DOCKER_EXECUTOR_DOCKERHUB_USERNAME
           password: $DOCKER_EXECUTOR_DOCKERHUB_PASSWORD
@@ -23,7 +23,7 @@ jobs:
             - v1-dependencies-
       - run:
           name: Install Python prerequisites
-          command: python3.7 -m pip install --requirement requirements.txt
+          command: python3.9 -m pip install --requirement requirements.txt
       - save_cache:
           paths:
             - ./env
@@ -57,7 +57,7 @@ jobs:
           command: run-unit-tests.sh
       - run:
           name: Upload Unit Test Coverage Data to Codecov
-          command: codecov
+          command: run-codecov-uploader.sh
       - run:
           name: Build README.rst
           command: build-readme-dot-rst.sh
