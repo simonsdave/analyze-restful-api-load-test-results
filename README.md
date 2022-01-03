@@ -2,7 +2,7 @@
 
 ![Maintained](https://img.shields.io/maintenance/yes/2022.svg?style=flat)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
 [![Requirements Status](https://requires.io/github/simonsdave/analyze-restful-api-load-test-results/requirements.svg?branch=master)](https://requires.io/github/simonsdave/analyze-restful-api-load-test-results/requirements/?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/simonsdave/analyze-restful-api-load-test-results/badge/master)](https://www.codefactor.io/repository/github/simonsdave/analyze-restful-api-load-test-results/overview/master)
 [![CircleCI](https://circleci.com/gh/simonsdave/analyze-restful-api-load-test-results/tree/master.svg?style=shield)](https://circleci.com/gh/simonsdave/analyze-restful-api-load-test-results/tree/master)
