@@ -20,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - ```dev-env``` v0.5.14 -> v0.6.21
-- ```matplotlib``` 2.2.3 -> 3.5.3
+- ```matplotlib``` 2.2.3 -> 3.6.0
 - ```numpy``` 1.15.3 -> 1.23.2
 - ```python-dateutil``` 2.8.0 -> 2.8.1
 - added markdown and json linting to CircleCI pipeline
